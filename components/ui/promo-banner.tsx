@@ -36,7 +36,7 @@ export function PromoBanner({ className }: PromoBannerProps) {
     );
 
     return (
-        <div className={cn("relative w-full overflow-hidden bg-black py-4 shadow-2xl transform -rotate-2 border-y border-blue-500/50", className)}>
+        <div className={cn("relative w-full overflow-hidden bg-black py-4 shadow-2xl border-y border-blue-500/50", className)}>
             <div className="flex w-fit animate-marquee">
                 {/* Renderizamos dos bloques idénticos para el loop infinito perfecto */}
                 <ContentBlock />

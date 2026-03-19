@@ -139,8 +139,8 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Tilted Banner Strip - Moved Below Products */}
-      <div className="relative z-20 -my-12 transform rotate-0 scale-100 sm:-rotate-1 sm:scale-110">
+      {/* Promo Banner Strip */}
+      <div className="relative z-20 -my-12">
         <PromoBanner />
       </div>
 
@@ -166,16 +166,27 @@ export default function Home() {
       </Section>
 
       {/* Developer Footer */}
-      <footer className="w-full py-12 bg-black border-t-2 border-blue-500 text-center relative z-20 shadow-[0_-10px_50px_rgba(59,130,246,0.3)]">
-        <a
-          href="https://wa.me/51917024847?text=Hola,%20vi%20tu%20u%20web%20y%20me%20interesa%20crear%20mi%20página"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-400 hover:text-blue-400 font-medium transition-colors text-sm md:text-base group"
-        >
-          ¿Quieres que cree tu página? <span className="text-blue-500 font-bold ml-1 group-hover:text-blue-300 transition-colors hover:underline decoration-blue-500/50 underline-offset-4">Click aquí</span>
-        </a>
-      </footer>
+<footer className="w-full py-4 bg-black border-t-2 border-blue-500 text-center relative z-20 shadow-[0_-10px_50px_rgba(59,130,246,0.3)]">
+  <div className="mt-2 text-gray-500 text-xs md:text-sm opacity-70">
+    © 2026 PINGUIS SMS FOLLOWERS. Todos los derechos reservados.
+  </div>
+  <a
+    href="https://wa.me/51917024847?text=Hola,%20vi%20tu%20web%20y%20me%20interesa%20crear%20mi%20p%C3%A1gina.%20Tambi%C3%A9n%20vis%C3%ADtenos%20en%20https://www.ksyan.dev/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-gray-400 hover:text-blue-400 font-medium transition-colors text-sm md:text-base group"
+  >
+    Desarrollado por 
+    <span className="text-blue-500 font-bold ml-1 group-hover:text-blue-300 transition-colors hover:underline decoration-blue-500/50 underline-offset-4">
+      www.ksyan.dev
+    </span> 
+    <span className="ml-2 text-gray-500 text-xs md:text-sm">
+      v1.0.0
+    </span>
+  </a>
+
+  
+</footer>
 
       <Cart />
     </div >
