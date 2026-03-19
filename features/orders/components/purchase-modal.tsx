@@ -116,7 +116,6 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
                                 </div>
                             </div>
                             <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-lg flex gap-2">
-                                <span className="text-amber-400">ℹ️</span>
                                 <p className="text-xs text-amber-200/80 leading-relaxed">
                                     Se creará una solicitud y serás redirigido a WhatsApp para completar el pedido.
                                 </p>

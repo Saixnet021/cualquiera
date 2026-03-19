@@ -18,11 +18,12 @@ export default function Home() {
   const { products, loading } = useProducts();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+  const filteredProducts = normalizedSearch
+    ? products.filter((product) =>
+        product.name?.toLowerCase().includes(normalizedSearch)
+      )
+    : products;
 
   const scrollToProducts = () => {
     const element = document.getElementById('productos');
@@ -52,24 +53,8 @@ export default function Home() {
             Explora Nuestros <span className="text-blue-500">Productos</span>
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto px-4 font-medium leading-relaxed">
-            Los mejores productos digitales del mercado a un solo clic de distancia
+            Los mejores productos digitales del mercado a un solo click de distancia
           </p>
-
-          <div className="max-w-xl md:max-w-2xl mx-auto relative px-4 mb-16">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative">
-                <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-blue-500 transition-colors" />
-                <Input
-                  type="text"
-                  placeholder="¿Qué estás buscando hoy?"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 md:pl-14 h-14 md:h-16 text-base md:text-lg rounded-full border-2 border-gray-100 focus:border-blue-500 shadow-xl bg-white/80 backdrop-blur-sm transition-all"
-                />
-              </div>
-            </div>
-          </div>
 
           {/* New Polished Stats Section - Monochromatic Blue Theme */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto px-4 mt-12">
@@ -108,6 +93,27 @@ export default function Home() {
             title="Nuestros Productos"
             description="Elige entre nuestros mejores productos"
           />
+
+          {/* Product Search */}
+          <div className="mb-10">
+            <div className="relative mx-auto max-w-3xl">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-600/40 via-cyan-400/40 to-blue-600/40 blur-lg opacity-70" />
+              <div className="relative rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-[0_0_30px_rgba(59,130,246,0.25)]">
+                <div className="flex items-center gap-2.5 px-4 sm:px-5 py-1.5">
+                  <div className="flex items-center justify-center w-7 h-7">
+                    <Search className="w-4 h-4 text-blue-300" />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Buscar por nombre de producto..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="h-9 sm:h-10 text-sm sm:text-base bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-white placeholder:text-gray-400 px-0"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
         {loading ? (
           <div className="text-center py-12">
