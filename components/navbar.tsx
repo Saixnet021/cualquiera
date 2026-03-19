@@ -74,7 +74,7 @@ export function Navbar() {
             Catálogo
           </Link>
 
-          {user && (
+          {user?.email === 'admin@admin.com' && (
             <Link
               href="/admin"
               className="flex items-center gap-1 transition-colors text-base font-bold text-white hover:text-blue-400"
@@ -110,7 +110,7 @@ export function Navbar() {
               Catálogo
             </Link>
 
-            {user && (
+            {user?.email === 'admin@admin.com' && (
               <Link
                 href="/admin"
                 onClick={() => setIsMenuOpen(false)}

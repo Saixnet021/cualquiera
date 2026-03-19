@@ -39,8 +39,8 @@ export function AuthButton({ className }: { className?: string }) {
                     className="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 font-bold transition-all"
                     size="sm"
                 >
-                    <LogOut className="w-4 h-4 md:mr-2" />
-                    <span className="hidden md:inline">Salir</span>
+                    <LogOut className="w-4 h-4" />
+
                 </Button>
             </div>
         );
