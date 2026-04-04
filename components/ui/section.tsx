@@ -5,7 +5,7 @@ import { AnimateIn } from './animate-in';
 interface SectionProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     container?: boolean;
-    background?: 'white' | 'gray' | 'gradient';
+    background?: 'white' | 'gray' | 'dark';
 }
 
 export function Section({
@@ -17,8 +17,8 @@ export function Section({
 }: SectionProps) {
     const bgColors = {
         white: 'bg-white',
-        gray: 'bg-slate-50',
-        gradient: 'bg-gradient-to-br from-gray-100 to-gray-50',
+        gray: 'bg-[#FAFAFA]',
+        dark: 'bg-[#0A0A0A]',
     };
 
     return (
@@ -57,21 +57,21 @@ export function SectionHeader({
     return (
         <AnimateIn animation="fade-in" className={cn('mb-12', className)}>
             <div className={cn(
-                'flex flex-col gap-4',
+                'flex flex-col gap-2',
                 align === 'center' && 'items-center text-center',
                 align === 'right' && 'items-end text-right',
             )}>
                 <h2 className={cn(
-                    'text-3xl md:text-4xl font-bold',
-                    textColor === 'dark' ? 'text-gray-900' : 'text-white',
+                    'text-3xl md:text-4xl font-extrabold tracking-tight',
+                    textColor === 'dark' ? 'text-[#0A0A0A]' : 'text-white',
                     titleClassName
                 )}>
                     {title}
                 </h2>
                 {description && (
                     <p className={cn(
-                        'text-lg max-w-2xl',
-                        textColor === 'dark' ? 'text-gray-600' : 'text-gray-200',
+                        'text-sm sm:text-base',
+                        textColor === 'dark' ? 'text-[#666]' : 'text-[#999]',
                         descriptionClassName
                     )}>
                         {description}

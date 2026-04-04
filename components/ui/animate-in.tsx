@@ -44,12 +44,21 @@ export function AnimateIn({
         };
     }, [threshold]);
 
-    const getAnimationClass = () => {
+    const getInitialState = () => {
         switch (animation) {
-            case 'slide-up': return 'animate-slide-up';
-            case 'slide-down': return 'animate-slide-down';
-            case 'scale-in': return 'animate-scale-in';
-            default: return 'animate-fade-in';
+            case 'slide-up': return 'opacity-0 translate-y-12 blur-[8px]';
+            case 'slide-down': return 'opacity-0 -translate-y-12 blur-[8px]';
+            case 'scale-in': return 'opacity-0 scale-90 blur-[8px]';
+            default: return 'opacity-0 blur-[8px]';
+        }
+    };
+
+    const getFinalState = () => {
+        switch (animation) {
+            case 'slide-up':
+            case 'slide-down': return 'opacity-100 translate-y-0 blur-0';
+            case 'scale-in': return 'opacity-100 scale-100 blur-0';
+            default: return 'opacity-100 blur-0';
         }
     };
 
@@ -57,10 +66,11 @@ export function AnimateIn({
         <div
             ref={ref}
             className={cn(
-                isVisible ? getAnimationClass() : 'opacity-0',
+                'transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                isVisible ? getFinalState() : getInitialState(),
                 className
             )}
-            style={{ animationDelay: `${delay}s` }}
+            style={{ transitionDelay: `${delay}s` }}
         >
             {children}
         </div>

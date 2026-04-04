@@ -16,9 +16,7 @@ export function AuthButton({ className }: { className?: string }) {
     const router = useRouter();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
+        const unsubscribe = onAuthStateChanged(auth, (user) => setUser(user));
         return () => unsubscribe();
     }, [setUser]);
 
@@ -29,33 +27,26 @@ export function AuthButton({ className }: { className?: string }) {
 
     if (user) {
         return (
-            <div className="flex items-center gap-4">
-                <span className={cn("text-sm font-medium flex items-center gap-2 hidden md:flex", className || 'text-gray-900')}>
-                    <UserIcon className="w-4 h-4" />
+            <div className={cn("flex items-center gap-2", className)}>
+                <span className="text-[13px] font-[family-name:var(--font-manrope)] font-bold text-[#8d90a2] hidden md:flex items-center gap-1.5">
                     {user.displayName || user.email}
                 </span>
-                <Button
+                <button
                     onClick={handleSignOut}
-                    className="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 font-bold transition-all"
-                    size="sm"
+                    className="p-2 rounded-xl text-[#8d90a2] hover:text-[#ffb4ab] hover:bg-[#690005]/20 border border-transparent hover:border-[#ffb4ab]/20 transition-all duration-300"
+                    aria-label="Cerrar sesión"
                 >
                     <LogOut className="w-4 h-4" />
-
-                </Button>
+                </button>
             </div>
         );
     }
 
     return (
-        <Link href="/auth">
-            <Button
-                className="bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] transition-all hover:scale-105 border border-blue-400/30"
-                size="sm"
-            >
-                <UserIcon className="w-4 h-4 md:mr-2" />
-                <span className="hidden md:inline">Iniciar Sesión</span>
-                <span className="md:hidden">Login</span>
-            </Button>
+        <Link href="/auth" className={cn("flex items-center gap-2 text-[#c3c5d8] hover:text-white font-[family-name:var(--font-manrope)] font-bold text-sm transition-all hover:-translate-y-0.5", className)}>
+            <UserIcon className="w-5 h-5" />
+            <span className="hidden md:inline">Iniciar Sesión</span>
+            <span className="md:hidden">Login</span>
         </Link>
     );
 }

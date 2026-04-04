@@ -4,125 +4,120 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { AuthButton } from '@/features/auth/components/auth-button';
-import { Shield, Menu, X } from 'lucide-react';
+import { Shield, Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { useAuth } from '@/features/auth/store/auth.store';
+import { useCart } from '@/features/cart/store/cart.store';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const { user } = useAuth();
+  const items = useCart((state) => state.items);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
+    document.body.style.overflow = isMenuOpen ? 'hidden' : 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [isMenuOpen]);
 
   return (
-    <nav className="fixed inset-x-0 top-0 z-50 px-2 md:px-0">
-      <div
-        className={cn(
-          "mx-auto mt-2 md:mt-4 flex items-center justify-between w-full md:w-[90%] md:max-w-7xl h-16 md:h-20 px-4 md:px-6 transition-all duration-300 ease-in-out border border-white/10 rounded-2xl md:rounded-3xl",
-          isScrolled || isMenuOpen
-            ? "bg-black/90 md:bg-black/80 backdrop-blur-xl shadow-lg text-white"
-            : "bg-black/70 md:bg-black/40 backdrop-blur-lg shadow-md text-white"
-        )}
-      >
+    <nav role="navigation" className={cn(
+      'fixed inset-x-0 top-0 z-50 bg-slate-950/60 backdrop-blur-xl transition-all duration-200',
+      isScrolled ? 'shadow-lg border-b border-[var(--border)]' : ''
+    )}>
+      <div className="flex items-center justify-between w-full h-16 px-6 md:px-12 lg:px-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity flex-shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 relative rounded-full overflow-hidden border-2 border-white/20 flex-shrink-0">
-            <Image
-              src="/pedro.jpeg"
-              alt="PEDRO SMS Logo"
-              fill
-              className="object-cover"
-            />
+        <Link href="/" className="flex items-center gap-2.5 hover:opacity-70 transition-opacity">
+          <div className="w-8 h-8 relative rounded-full overflow-hidden border border-[var(--border)]">
+            <Image src="/pedro.jpeg" alt="Logo" fill className="object-cover" />
           </div>
-          <div className="min-w-0">
-            <span className={cn("text-sm sm:text-base md:text-xl font-bold block text-white truncate")}>
-              PINGUIS SMS FOLLOWERS
-            </span>
-            {!isScrolled && (
-              <span className="text-[9px] sm:text-xs md:text-xs text-blue-200 hidden sm:block font-medium truncate">
-                Explora Productos
-              </span>
-            )}
-          </div>
+          <span className="text-sm font-bold text-white tracking-tight">
+            PINGUIS SMS
+          </span>
         </Link>
 
-        {/* Desktop Links & Actions */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="/#productos"
-            className="transition-colors text-base font-bold text-white hover:text-blue-400"
-          >
-            Catálogo
-          </Link>
-
-          {user?.email === 'admin@admin.com' && (
-            <Link
-              href="/admin"
-              className="flex items-center gap-1 transition-colors text-base font-bold text-white hover:text-blue-400"
-            >
-              <Shield className="w-4 h-4" />
-              Admin
+        {/* Right - Desktop Links & Accessories */}
+        <div className="hidden md:flex items-center gap-6 ml-auto">
+          {/* Links */}
+          <div className="flex items-center gap-6 font-[family-name:var(--font-manrope)] font-bold tracking-tight">
+            <Link href="/#productos" className="text-blue-500 border-b-2 border-blue-500 pb-1 text-sm transition-colors">
+              Catálogo
             </Link>
-          )}
+            {user?.email === 'admin@admin.com' && (
+              <Link href="/admin" className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-white transition-colors">
+                <Shield className="w-4 h-4" />Admin
+              </Link>
+            )}
+          </div>
 
-          <AuthButton className="text-white" />
+          <div className="h-4 w-px bg-[#434656] mx-1" /> {/* Divider */}
+
+          {/* Accessories */}
+          <div className="flex gap-4 items-center">
+            <button
+              onClick={() => { (document.querySelector('[data-cart-fab]') as HTMLButtonElement)?.click(); }}
+              className="relative p-2 rounded-full text-[#dfe2eb] hover:bg-slate-800/50 transition-all duration-300"
+              aria-label={`Carrito, ${items.length} items`}
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {items.length > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-[#1d4ed8] text-white text-[9px] font-extrabold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
+                  {items.length}
+                </span>
+              )}
+            </button>
+            <AuthButton />
+          </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
+        {/* Mobile */}
+        <div className="md:hidden flex items-center gap-2">
+          <button
+            onClick={() => { (document.querySelector('[data-cart-fab]') as HTMLButtonElement)?.click(); }}
+            className="relative p-2 rounded-lg text-white hover:text-[var(--primary)] hover:bg-[#1e293b] transition-all"
+            aria-label="Carrito"
+          >
+            <ShoppingCart className="w-5 h-5" />
+            {items.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[var(--primary)] text-white text-[10px] font-extrabold rounded-full h-4 w-4 flex items-center justify-center shadow-lg shadow-blue-500/50">
+                {items.length}
+              </span>
+            )}
+          </button>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-white hover:text-blue-400 transition-colors"
+            className="p-2 text-white hover:bg-[#1e293b] rounded-lg transition-colors"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-16 left-0 bg-black z-40 md:hidden animate-in fade-in slide-in-from-top-2 duration-200 w-full overflow-x-hidden">
-          <div className="flex flex-col items-center justify-start pt-8 h-[calc(100vh-4rem)] gap-4 px-4 overflow-y-auto w-full">
-            <Link
-              href="/#productos"
-              onClick={() => setIsMenuOpen(false)}
-              className="w-full flex justify-center py-4 rounded-2xl bg-white/5 border border-white/10 text-xl font-bold text-white hover:bg-white/10 hover:border-blue-500/50 transition-all tracking-tight"
-            >
+        <div className="fixed inset-0 top-16 bg-[var(--background)] z-40 md:hidden">
+          <div className="flex flex-col pt-8 px-6 gap-2">
+            <Link href="/#productos" onClick={() => setIsMenuOpen(false)}
+              className="py-4 text-xl font-extrabold text-white border-b border-[var(--border)] hover:text-[var(--primary)]">
               Catálogo
             </Link>
-
             {user?.email === 'admin@admin.com' && (
-              <Link
-                href="/admin"
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-white/5 border border-white/10 text-xl font-bold text-white hover:bg-white/10 hover:border-blue-500/50 transition-all tracking-tight"
-              >
-                <Shield className="w-6 h-6 text-blue-400" />
-                Panel Admin
+              <Link href="/admin" onClick={() => setIsMenuOpen(false)}
+                className="py-4 text-xl font-extrabold text-white border-b border-[var(--border)] flex items-center gap-2 hover:text-[var(--primary)]">
+                <Shield className="w-5 h-5" /> Administrador
               </Link>
             )}
-
-            <div className="pt-6 w-full">
-              <AuthButton className="text-white w-full scale-100 flex justify-center" />
+            <div className="pt-4">
+              <AuthButton className="w-full" />
             </div>
           </div>
         </div>

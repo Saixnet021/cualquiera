@@ -294,25 +294,20 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black py-8 pt-28 relative">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black pointer-events-none" />
+    <div className="min-h-screen bg-[#0a0e14] py-8 pt-28 relative">
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between mb-8 gap-6 text-center sm:text-left">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">Panel de <span className="text-blue-500">Administración</span></h1>
-          <Button onClick={handleSignOut} className="bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 w-full sm:w-auto">
-            <LogOut className="w-4 h-4 mr-2" />
-            Salir
-          </Button>
+        <div className="mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">Panel de <span className="text-[#1d4ed8]">Administración</span></h1>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-white/10 overflow-x-auto">
+        <div className="flex gap-2 mb-6 border-b border-[#262a31] overflow-x-auto">
           <button
             onClick={() => setActiveTab('productos')}
             className={`px-4 py-3 font-bold whitespace-nowrap transition ${activeTab === 'productos'
-              ? 'border-b-2 border-blue-500 text-blue-400'
-              : 'text-gray-400 hover:text-white'
+              ? 'border-b-2 border-[#1d4ed8] text-[#1d4ed8]'
+              : 'text-[#64748b] hover:text-white'
               }`}
           >
             <Package className="w-4 h-4 inline mr-2" />
@@ -321,8 +316,8 @@ export default function AdminPage() {
           <button
             onClick={() => setActiveTab('pedidos')}
             className={`px-4 py-3 font-bold whitespace-nowrap transition ${activeTab === 'pedidos'
-              ? 'border-b-2 border-blue-500 text-blue-400'
-              : 'text-gray-400 hover:text-white'
+              ? 'border-b-2 border-[#1d4ed8] text-[#1d4ed8]'
+              : 'text-[#64748b] hover:text-white'
               }`}
           >
             <ShoppingBag className="w-4 h-4 inline mr-2" />
@@ -331,8 +326,8 @@ export default function AdminPage() {
           <button
             onClick={() => setActiveTab('usuarios')}
             className={`px-4 py-3 font-bold whitespace-nowrap transition ${activeTab === 'usuarios'
-              ? 'border-b-2 border-blue-500 text-blue-400'
-              : 'text-gray-400 hover:text-white'
+              ? 'border-b-2 border-[#1d4ed8] text-[#1d4ed8]'
+              : 'text-[#64748b] hover:text-white'
               }`}
           >
             <Users className="w-4 h-4 inline mr-2" />
@@ -341,34 +336,34 @@ export default function AdminPage() {
         </div>
 
         {/* Content */}
-        <div className="bg-white/5 backdrop-blur-md rounded-xl shadow-xl border border-white/10">
+        <div className="bg-[#10141a] rounded-xl border border-[#262a31]">
           {/* Productos Tab */}
           {activeTab === 'productos' && (
             <div className="p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                  <Package className="w-6 h-6 text-blue-500" />
+                  <Package className="w-6 h-6 text-[#1d4ed8]" />
                   Gestión de Productos
                 </h2>
-                <Button onClick={() => setShowAddProduct(!showAddProduct)} className="bg-blue-600 hover:bg-blue-500 w-full sm:w-auto shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                <Button onClick={() => setShowAddProduct(!showAddProduct)} className="bg-[#1d4ed8] hover:bg-blue-800 w-full sm:w-auto shadow-none">
                   <Plus className="w-4 h-4 mr-2" />
                   Agregar Producto
                 </Button>
               </div>
 
               {showAddProduct && (
-                <div className="mb-6 p-4 border border-blue-500/30 rounded-lg bg-blue-900/10 space-y-3">
+                <div className="mb-6 p-4 border border-[#262a31] rounded-lg bg-[#181c22] space-y-3">
                   <Input
                     placeholder="Nombre"
                     value={newProduct.name}
                     onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                    className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                    className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                   />
                   <Input
                     placeholder="Descripción"
                     value={newProduct.description}
                     onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                    className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                    className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                   />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <Input
@@ -376,26 +371,26 @@ export default function AdminPage() {
                       placeholder="Precio"
                       value={newProduct.price || ''}
                       onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
-                      className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                      className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                     />
                     <Input
                       type="number"
                       placeholder="Stock"
                       value={newProduct.stock || ''}
                       onChange={(e) => setNewProduct({ ...newProduct, stock: parseInt(e.target.value) })}
-                      className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                      className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-300 block">Imagen del producto</label>
+                    <label className="text-sm font-semibold text-[#c3c5d8] block">Imagen del producto</label>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="flex h-10 w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-gray-300 focus:border-blue-500 file:bg-blue-600 file:text-white file:border-0 file:rounded-sm file:mr-2"
+                      className="flex h-10 w-full rounded-md border border-[#262a31] bg-[#0a0e14] px-3 py-2 text-sm text-[#c3c5d8] focus:border-[#1d4ed8] file:bg-[#1d4ed8] file:text-white file:border-0 file:rounded-sm file:mr-2 file:cursor-pointer"
                     />
                     {newProduct.imageUrl && (
-                      <div className="relative w-full h-24 bg-black/40 rounded-md overflow-hidden border border-white/10">
+                      <div className="relative w-full h-24 bg-[#0a0e14] rounded-md overflow-hidden border border-[#262a31]">
                         <img
                           src={newProduct.imageUrl}
                           alt="preview"
@@ -408,15 +403,15 @@ export default function AdminPage() {
                     placeholder="Categoría"
                     value={newProduct.category}
                     onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                    className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                   />
                   <Input
                     placeholder="WhatsApp (ej: 51937074085)"
                     value={newProduct.whatsappNumber}
                     onChange={(e) => setNewProduct({ ...newProduct, whatsappNumber: e.target.value })}
-                    className="text-white bg-black/40 border-white/10 focus:border-blue-500 placeholder-gray-500"
+                    className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8] placeholder-[#64748b]"
                   />
-                  <Button onClick={handleAddProduct} className="w-full bg-green-600 hover:bg-green-500 text-white font-bold shadow-[0_0_20px_rgba(34,197,94,0.4)] border border-green-500/30">
+                  <Button onClick={handleAddProduct} className="w-full bg-[#10b981] hover:bg-[#059669] text-white font-bold shadow-none">
                     Guardar Producto
                   </Button>
                 </div>
@@ -424,7 +419,7 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {products.map((product) => (
-                  <div key={product.id} className="p-4 border border-white/10 rounded-lg bg-black/20 hover:border-blue-500/50 transition-all group hover:bg-black/30">
+                  <div key={product.id} className="p-4 border border-[#262a31] rounded-xl bg-[#181c22] hover:border-[#1d4ed8]/50 transition-all group">
                     <div className="space-y-3">
                       {editingProduct === product.id ? (
                         <>
@@ -434,7 +429,7 @@ export default function AdminPage() {
                               const updated = products.map(p => p.id === product.id ? { ...p, name: e.target.value } : p);
                               setProducts(updated);
                             }}
-                            className="text-white bg-black/40 border-white/10 focus:border-blue-500"
+                            className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8]"
                           />
                           <Input
                             type="number"
@@ -443,7 +438,7 @@ export default function AdminPage() {
                               const updated = products.map(p => p.id === product.id ? { ...p, stock: parseInt(e.target.value) } : p);
                               setProducts(updated);
                             }}
-                            className="text-white bg-black/40 border-white/10 focus:border-blue-500"
+                            className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8]"
                             placeholder="Stock"
                           />
                           <Input
@@ -453,7 +448,7 @@ export default function AdminPage() {
                               const updated = products.map(p => p.id === product.id ? { ...p, price: parseFloat(e.target.value) } : p);
                               setProducts(updated);
                             }}
-                            className="text-white bg-black/40 border-white/10 focus:border-blue-500"
+                            className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8]"
                             placeholder="Precio"
                           />
                           <Input
@@ -462,16 +457,16 @@ export default function AdminPage() {
                               const updated = products.map(p => p.id === product.id ? { ...p, whatsappNumber: e.target.value } : p);
                               setProducts(updated);
                             }}
-                            className="text-white bg-black/40 border-white/10 focus:border-blue-500"
+                            className="text-white bg-[#0a0e14] border-[#262a31] focus:border-[#1d4ed8]"
                             placeholder="WhatsApp"
                           />
                         </>
                       ) : (
                         <>
-                          <h4 className="font-bold text-white group-hover:text-blue-400 transition-colors">{product.name}</h4>
+                          <h4 className="font-bold text-white group-hover:text-[#1d4ed8] transition-colors">{product.name}</h4>
                           <div className="text-sm space-y-1">
-                            <p className="text-blue-400 font-semibold">{formatPrice(product.price)}</p>
-                            <p className="text-gray-400">
+                            <p className="text-[#1d4ed8] font-semibold">{formatPrice(product.price)}</p>
+                            <p className="text-[#64748b]">
                               Stock: <span className={product.stock > 10 ? 'text-green-400 font-bold' : product.stock > 0 ? 'text-yellow-400 font-bold' : 'text-red-400 font-bold'}>{product.stock}</span>
                             </p>
                           </div>
@@ -488,7 +483,7 @@ export default function AdminPage() {
                                 whatsappNumber: product.whatsappNumber
                               })}
                               size="sm"
-                              className="flex-1 bg-green-600 hover:bg-green-500"
+                              className="flex-1 bg-[#10b981] hover:bg-[#059669] shadow-none border-none text-white"
                             >
                               <Check className="w-4 h-4" />
                             </Button>
@@ -496,7 +491,7 @@ export default function AdminPage() {
                               onClick={() => setEditingProduct(null)}
                               variant="outline"
                               size="sm"
-                              className="flex-1 border-white/40 text-white hover:bg-white/10"
+                              className="flex-1 border-[#262a31] text-[#64748b] hover:bg-[#262a31] hover:text-white"
                             >
                               <X className="w-4 h-4" />
                             </Button>
@@ -507,14 +502,14 @@ export default function AdminPage() {
                               onClick={() => setEditingProduct(product.id)}
                               variant="outline"
                               size="sm"
-                              className="flex-1 border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:text-blue-300 hover:border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:shadow-[0_0_30px_rgba(59,130,246,0.4)] transition-all font-bold"
+                              className="flex-1 border-[#1d4ed8] bg-transparent text-[#1d4ed8] hover:bg-[#1d4ed8] hover:text-white font-bold transition-colors shadow-none"
                             >
                               Editar
                             </Button>
                             <Button
                               onClick={() => handleDeleteProduct(product.id)}
                               size="sm"
-                              className="flex-1 bg-red-900/30 text-red-400 hover:bg-red-900/50 border border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
+                              className="flex-[0.5] bg-[#7f1d1d] hover:bg-[#991b1b] text-white shadow-none"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -532,29 +527,29 @@ export default function AdminPage() {
           {activeTab === 'pedidos' && (
             <div className="p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2 mb-6">
-                <ShoppingBag className="w-6 h-6 text-blue-500" />
+                <ShoppingBag className="w-6 h-6 text-[#1d4ed8]" />
                 Gestión de Pedidos
               </h2>
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
                 {orders
                   .filter((order) => order.status === 'pending')
                   .map((order) => (
-                    <div key={order.id} className="p-4 border border-yellow-500/30 rounded-lg bg-yellow-900/10 hover:border-blue-500/50 transition">
+                    <div key={order.id} className="p-4 border border-[#262a31] rounded-xl bg-[#181c22] hover:border-[#1d4ed8]/50 transition">
                       <div className="mb-3">
                         <p className="font-bold text-white">{order.userEmail}</p>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-[#64748b]">
                           Fecha: {order.createdAt?.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) || 'N/A'}
                         </p>
                       </div>
-                      <div className="bg-black/30 p-3 rounded border border-white/10 mb-3">
-                        <p className="font-bold text-gray-200">{order.items?.[0]?.name || 'Producto desconocido'} {order.items?.length > 1 ? `(+${order.items.length - 1} más)` : ''}</p>
-                        <p className="text-blue-400 font-semibold">Items: {order.items?.reduce((acc, item) => acc + item.quantity, 0) || 0}</p>
-                        <p className="text-lg font-bold text-white">Total: {formatPrice(order.finalTotal || order.total || 0)}</p>
+                      <div className="bg-[#0a0e14] p-3 rounded-lg border border-[#262a31] mb-3">
+                        <p className="font-bold text-[#f7f5ff]">{order.items?.[0]?.name || 'Producto desconocido'} {order.items?.length > 1 ? `(+${order.items.length - 1} más)` : ''}</p>
+                        <p className="text-[#c3c5d8] font-semibold text-sm">Items: {order.items?.reduce((acc, item) => acc + item.quantity, 0) || 0}</p>
+                        <p className="text-lg font-black text-[#1d4ed8] mt-1">Total: {formatPrice(order.finalTotal || order.total || 0)}</p>
                       </div>
                       <div className="flex gap-2">
                         <Button
                           onClick={() => handleApproveOrder(order)}
-                          className="flex-1 bg-green-600 hover:bg-green-500"
+                          className="flex-1 bg-[#10b981] hover:bg-[#059669] text-white shadow-none"
                           size="sm"
                         >
                           <Check className="w-4 h-4 mr-2" />
@@ -562,7 +557,7 @@ export default function AdminPage() {
                         </Button>
                         <Button
                           onClick={() => handleRejectOrder(order.id)}
-                          className="flex-1 bg-red-600 hover:bg-red-500"
+                          className="flex-[0.5] bg-[#7f1d1d] hover:bg-[#991b1b] text-white shadow-none"
                           size="sm"
                         >
                           <X className="w-4 h-4 mr-2" />
@@ -572,7 +567,7 @@ export default function AdminPage() {
                     </div>
                   ))}
                 {orders.filter((order) => order.status === 'pending').length === 0 && (
-                  <p className="text-center text-gray-500 py-12 text-lg font-medium">No hay pedidos pendientes</p>
+                  <p className="text-center text-[#64748b] py-12 text-lg font-medium">No hay pedidos pendientes</p>
                 )}
               </div>
             </div>
@@ -582,30 +577,30 @@ export default function AdminPage() {
           {activeTab === 'usuarios' && (
             <div className="p-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-2 mb-6">
-                <Users className="w-6 h-6 text-blue-500" />
+                <Users className="w-6 h-6 text-[#1d4ed8]" />
                 Gestión de Usuarios
               </h2>
               <div className="overflow-x-auto pb-4">
                 <table className="w-full text-left min-w-[600px]">
                   <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="py-3 px-4 font-bold text-gray-300">Nombre</th>
-                      <th className="py-3 px-4 font-bold text-gray-300">Email</th>
-                      <th className="py-3 px-4 font-bold text-gray-300">Registrado</th>
-                      <th className="py-3 px-4 font-bold text-gray-300">Total de Órdenes</th>
-                      <th className="py-3 px-4 font-bold text-gray-300">Última Orden</th>
+                    <tr className="border-b border-[#262a31]">
+                      <th className="py-3 px-4 font-bold text-[#64748b]">Nombre</th>
+                      <th className="py-3 px-4 font-bold text-[#64748b]">Email</th>
+                      <th className="py-3 px-4 font-bold text-[#64748b]">Registrado</th>
+                      <th className="py-3 px-4 font-bold text-[#64748b]">Total de Órdenes</th>
+                      <th className="py-3 px-4 font-bold text-[#64748b]">Última Orden</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.map((user, index) => (
-                      <tr key={index} className="border-b border-white/5 hover:bg-white/5 transition">
+                      <tr key={index} className="border-b border-[#262a31]/50 hover:bg-[#181c22] transition">
                         <td className="py-3 px-4 text-white font-medium">{user.displayName || 'N/A'}</td>
-                        <td className="py-3 px-4 text-gray-400">{user.email}</td>
-                        <td className="py-3 px-4 text-gray-500 text-sm">{user.createdAt?.toLocaleDateString('es-ES') || 'N/A'}</td>
-                        <td className="py-3 px-4 text-gray-400">
-                          <span className="bg-blue-900/30 text-blue-300 px-3 py-1 rounded-full font-bold border border-blue-500/20">{user.totalOrders}</span>
+                        <td className="py-3 px-4 text-[#c3c5d8]">{user.email}</td>
+                        <td className="py-3 px-4 text-[#64748b] text-sm">{user.createdAt?.toLocaleDateString('es-ES') || 'N/A'}</td>
+                        <td className="py-3 px-4">
+                          <span className="bg-[#1d4ed8] text-white px-3 py-1 rounded-full font-bold text-xs">{user.totalOrders}</span>
                         </td>
-                        <td className="py-3 px-4 text-gray-500 text-sm">
+                        <td className="py-3 px-4 text-[#64748b] text-sm">
                           {user.lastOrder?.toLocaleDateString('es-ES') || 'Sin pedidos'}
                         </td>
                       </tr>
@@ -613,7 +608,7 @@ export default function AdminPage() {
                   </tbody>
                 </table>
                 {users.length === 0 && (
-                  <p className="text-center text-gray-500 py-12 text-lg font-medium">No hay usuarios registrados</p>
+                  <p className="text-center text-[#64748b] py-12 text-lg font-medium">No hay usuarios registrados</p>
                 )}
               </div>
             </div>

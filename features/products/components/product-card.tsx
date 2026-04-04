@@ -3,13 +3,17 @@
 
 import { useState } from 'react';
 import { Product } from '@/types';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/features/cart/store/cart.store';
-import { ShoppingCart, CheckCircle } from 'lucide-react';
+import { ShoppingCart, CheckCircle, Check, Package } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import Image from 'next/image';
-import { PurchaseModal } from '@/features/orders/components/purchase-modal';
+import dynamic from 'next/dynamic';
+
+const PurchaseModal = dynamic(
+    () => import('@/features/orders/components/purchase-modal').then(mod => mod.PurchaseModal),
+    { ssr: false }
+);
 
 interface ProductCardProps {
     product: Product;
@@ -17,97 +21,91 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+    const [added, setAdded] = useState(false);
     const addItem = useCart((state) => state.addItem);
 
     const handleAddToCart = () => {
         if (product.stock > 0) {
             addItem(product);
+            setAdded(true);
+            setTimeout(() => setAdded(false), 1500);
         }
     };
 
     return (
         <>
-            <Card className="group relative overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] border border-blue-500/20 bg-black/60 shadow-xl rounded-xl backdrop-blur-md">
-                {/* Subtle border instead of moving gradient */}
-                <div className="absolute inset-0 rounded-xl p-[1px] bg-transparent group-hover:bg-blue-500/30 -z-10 transition-all opacity-0 group-hover:opacity-100" />
-
-                <div className="h-full overflow-hidden flex flex-col">
-                    <div className="relative h-40 sm:h-56 bg-gray-900/50 overflow-hidden group-hover:scale-105 transition-transform duration-700">
-                        {product.imageUrl ? (
-                            <Image
-                                src={product.imageUrl}
-                                alt={product.name}
-                                fill
-                                className="object-cover transition-opacity"
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full bg-gradient-to-b from-blue-900/20 to-black/20">
-                                <span className="text-6xl animate-bounce-slow filter drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">🎮</span>
-                            </div>
-                        )}
-                        {product.stock <= 5 && product.stock > 0 && (
-                            <div className="absolute top-2 right-2 bg-gradient-to-r from-orange-600 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse border border-white/10">
-                                ¡Últimas Unidades!
-                            </div>
-                        )}
-                        {product.stock === 0 && (
-                            <div className="absolute inset-0 bg-black/80 flex items-center justify-center backdrop-blur-[2px]">
-                                <span className="bg-red-600/90 text-white px-4 py-2 rounded-full font-bold text-lg transform -rotate-12 border-2 border-white/20 shadow-xl">AGOTADO</span>
-                            </div>
-                        )}
-                    </div>
-                    <CardContent className="p-3 sm:p-5 flex-1 flex flex-col justify-between bg-gradient-to-b from-transparent to-black/20">
-                        <div className="space-y-2 sm:space-y-3">
-                            <div>
-                                <h3 className="font-bold text-base sm:text-xl line-clamp-1 text-white transition-colors tracking-wide">{product.name}</h3>
-                                <p className="text-xs sm:text-sm text-gray-400 line-clamp-2 mt-1 min-h-[32px] sm:min-h-[40px] font-medium">{product.description}</p>
-                            </div>
-
-                            <div className="flex items-end justify-between border-t border-white/5 pt-2 sm:pt-4">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] sm:text-xs text-gray-500 uppercase font-bold tracking-wider">Precio</span>
-                                    <span className="text-xl sm:text-2xl font-black text-blue-400 tracking-tight drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]">
-                                        {formatPrice(product.price)}
-                                    </span>
-                                </div>
-                                <div className="text-right">
-                                    <span className={`text-xs font-bold px-2 py-1 rounded-md border ${product.stock > 0
-                                        ? 'bg-blue-900/30 text-blue-300 border-blue-500/30'
-                                        : 'bg-red-900/30 text-red-300 border-red-500/30'
-                                        }`}>
-                                        {product.stock > 0 ? `${product.stock} Disponibles` : 'Sin Stock'}
-                                    </span>
-                                </div>
-                            </div>
+            <div className="group h-full flex flex-col overflow-hidden rounded-[1.25rem] bg-[#181c22]/80 backdrop-blur-md border border-white/5 hover:border-white/10 hover:-translate-y-1.5 transition-all duration-500 max-w-[320px] mx-auto shadow-2xl shadow-black/40">
+                {/* Image */}
+                <div className="relative h-[220px] overflow-hidden flex-shrink-0 bg-[#0a0e14]">
+                    {product.imageUrl ? (
+                        <Image
+                            src={product.imageUrl} alt={product.name} fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                    ) : (
+                        <div className="flex items-center justify-center h-full">
+                            <Package className="w-12 h-12 text-[#434656]" />
                         </div>
+                    )}
+                    {/* Gradient Overlay for blending */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#181c22]/80 to-transparent pointer-events-none" />
 
-                        <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-2 sm:pt-4 mt-1 sm:mt-2">
+                    {product.stock <= 5 && product.stock > 0 && (
+                        <div className="absolute top-4 right-4 bg-gradient-to-r from-[#ffb59a] to-[#ffdbcf] text-[#5b1b00] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-lg uppercase tracking-wider">
+                            Top Ventas
+                        </div>
+                    )}
+                    {product.stock === 0 && (
+                        <div className="absolute inset-0 bg-[#0a0e14]/80 backdrop-blur-sm flex items-center justify-center">
+                            <span className="bg-[#ffb4ab] text-[#690005] px-4 py-1.5 rounded-lg font-extrabold text-xs tracking-widest shadow-lg">AGOTADO</span>
+                        </div>
+                    )}
+                    {product.stock > 5 && (
+                        <div className="absolute top-4 right-4 bg-[#1d4ed8]/20 backdrop-blur-md text-[#b6c4ff] border border-[#1d4ed8]/30 px-3 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1.5 uppercase tracking-wider shadow-lg">
+                            <Check className="w-3 h-3" /> Stock
+                        </div>
+                    )}
+                </div>
+
+                {/* Content */}
+                <div className="px-6 py-5 flex-1 flex flex-col justify-between relative z-10 bg-[#181c22]">
+                    <div className="mb-4">
+                        <h3 className="font-[family-name:var(--font-manrope)] font-extrabold text-xl lg:text-[22px] text-[#b6c4ff] line-clamp-2 mb-2 leading-tight tracking-tight shadow-sm">
+                            {product.name}
+                        </h3>
+                        <p className="text-[#8d90a2] text-[13px] line-clamp-2 leading-relaxed">
+                            {product.description || "Producto digital garantizado."}
+                        </p>
+                    </div>
+                    
+                    <div className="mt-auto flex flex-col gap-5">
+                        <div>
+                            <span className="font-[family-name:var(--font-manrope)] tracking-tight text-[26px] font-black text-white drop-shadow-md">
+                                {formatPrice(product.price)}
+                            </span>
+                        </div>
+                        <div className="flex gap-3">
                             <Button
                                 onClick={() => setIsPurchaseModalOpen(true)}
                                 disabled={product.stock === 0}
-                                className="bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all border border-blue-400/30 h-9 sm:h-10 text-xs sm:text-sm px-2"
+                                className="flex-grow bg-[#1d4ed8] text-white font-bold h-12 rounded-xl hover:bg-blue-800 transition-colors shadow-none"
                             >
-                                <CheckCircle className="w-4 h-4 mr-0.5 sm:mr-1" />
                                 Comprar
                             </Button>
                             <Button
                                 onClick={handleAddToCart}
                                 disabled={product.stock === 0}
                                 variant="outline"
-                                className="border border-blue-500/50 bg-blue-950/20 text-blue-400 hover:bg-blue-900/40 hover:text-cyan-300 hover:border-cyan-400/50 font-bold backdrop-blur-sm shadow-[0_0_15px_rgba(37,99,235,0.2)] hover:shadow-[0_0_25px_rgba(37,99,235,0.4)] h-9 sm:h-10 text-xs sm:text-sm px-2"
+                                className={`px-4 h-12 rounded-xl border-none transition-all duration-300 ${added ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)] scale-105' : 'bg-[#262a31] hover:bg-[#31353c] text-white'}`}
+                                aria-label="Añadir al carrito"
                             >
-                                <ShoppingCart className="w-4 h-4 mr-0.5 sm:mr-1" />
-                                Carrito
+                                {added ? <CheckCircle className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
                             </Button>
                         </div>
-                    </CardContent>
+                    </div>
                 </div>
-            </Card>
-            <PurchaseModal
-                isOpen={isPurchaseModalOpen}
-                product={product}
-                onClose={() => setIsPurchaseModalOpen(false)}
-            />
+            </div>
+            <PurchaseModal isOpen={isPurchaseModalOpen} product={product} onClose={() => setIsPurchaseModalOpen(false)} />
         </>
     );
 }

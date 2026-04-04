@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { formatPrice } from '@/lib/utils';
 import { useAuth } from '@/features/auth/store/auth.store';
 import { useOrder } from '../hooks/use-order';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface PurchaseModalProps {
     isOpen: boolean;
@@ -21,30 +21,25 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
     const [isPurchased, setIsPurchased] = useState(false);
     const { user } = useAuth();
 
-    // Si no está autenticado, mostrar mensaje
     if (!user) {
         return (
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="fixed bottom-0 sm:bottom-auto sm:top-1/2 left-0 sm:left-1/2 !translate-x-0 sm:!-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md bg-black sm:bg-black/90 border-t sm:border border-blue-500/20 rounded-t-3xl sm:rounded-2xl backdrop-blur-xl p-6 sm:p-6 shadow-2xl translate-y-0 translate-x-0">
+                <DialogContent className="sm:max-w-md p-6">
                     <DialogHeader>
-                        <DialogTitle className="text-xl flex items-center gap-2 text-red-400">
+                        <DialogTitle className="text-xl flex items-center gap-2 text-red-600">
                             <AlertCircle className="w-5 h-5" />
-                            Inicia Sesión Requerido
+                            Inicia sesión
                         </DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
-                        <p className="text-gray-300">
-                            Para realizar compras, debes tener una cuenta activa. Esto nos permite:
+                        <p className="text-[#666] text-sm">
+                            Debes tener una cuenta para comprar.
                         </p>
-                        <ul className="space-y-2 text-sm text-gray-400">
-                            <li>✓ Guardar tu información de compra</li>
-                            <li>✓ Ofrecerte descuentos especiales</li>
-                            <li>✓ Mantenerte actualizado con tus pedidos</li>
+                        <ul className="space-y-2 text-sm text-[#888]">
+                            <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#0A0A0A]" /> Historial de compras</li>
+                            <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#0A0A0A]" /> Soporte rápido</li>
                         </ul>
-                        <Button
-                            onClick={onClose}
-                            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold h-12"
-                        >
+                        <Button onClick={onClose} className="w-full">
                             Cerrar
                         </Button>
                     </div>
@@ -55,7 +50,6 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
 
     const handleConfirmPurchase = async () => {
         try {
-            // Crear la orden
             const orderData = {
                 userEmail: user?.email || 'guest@example.com',
                 items: [{
@@ -74,10 +68,9 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
             await createOrder(orderData);
             setIsPurchased(true);
 
-            // Esperar 2 segundos y redirigir a WhatsApp
             setTimeout(() => {
-                const message = `Hola, me interesa comprar: ${product.name} por ${formatPrice(product.price)}`;
-                const phoneNumber = product.whatsappNumber || '51937074085'; // Fallback por seguridad
+                const message = `Hola, quiero comprar: ${product.name} por ${formatPrice(product.price)}`;
+                const phoneNumber = product.whatsappNumber || '51937074085';
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
                 onClose();
@@ -91,68 +84,47 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="fixed bottom-0 sm:bottom-auto sm:top-1/2 left-0 sm:left-1/2 !translate-x-0 sm:!-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-md border-t sm:border border-blue-500/20 bg-black backdrop-blur-xl rounded-t-3xl sm:rounded-2xl p-6 sm:p-6 shadow-2xl max-h-[92vh] overflow-y-auto translate-y-0 translate-x-0">
+            <DialogContent className="sm:max-w-md p-6">
                 {!isPurchased ? (
                     <>
                         <DialogHeader>
-                            <DialogTitle className="text-xl text-white font-bold">Confirmar Compra</DialogTitle>
-                            <DialogDescription className="text-gray-400">
-                                Revisa los detalles antes de confirmar
+                            <DialogTitle className="text-xl text-[#0A0A0A] font-extrabold">Confirmar Compra</DialogTitle>
+                            <DialogDescription className="text-[#666]">
+                                Revisa los detalles de tu pedido
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-4">
-                            <div className="border-l-4 border-blue-600 pl-4 py-2 bg-blue-900/10">
-                                <h3 className="font-bold text-white text-base sm:text-lg leading-tight">{product.name}</h3>
-                                <p className="text-xs sm:text-sm text-gray-400 mt-1">{product.description}</p>
-                            </div>
-                            <div className="bg-white/5 border border-white/10 p-3 sm:p-4 rounded-lg">
-                                <div className="flex justify-between items-center mb-1 sm:mb-2">
-                                    <span className="text-xs sm:text-gray-400">Precio:</span>
-                                    <span className="font-extrabold text-blue-400 text-lg sm:text-xl">{formatPrice(product.price)}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs sm:text-gray-400">Stock disponible:</span>
-                                    <span className="font-bold text-green-400 text-xs sm:text-base">{product.stock}</span>
+                        <div className="space-y-5 pt-2">
+                            <div className="border border-[#E5E5E5] p-4 rounded-xl bg-[#FAFAFA]">
+                                <h3 className="font-bold text-[#0A0A0A] text-base leading-tight">{product.name}</h3>
+                                <p className="text-xs text-[#999] mt-1 line-clamp-1">{product.description}</p>
+                                <div className="mt-4 pt-4 border-t border-[#E5E5E5] flex justify-between items-center">
+                                    <span className="text-sm font-semibold text-[#666]">Total a pagar:</span>
+                                    <span className="font-bold text-[#0A0A0A] text-xl">{formatPrice(product.price)}</span>
                                 </div>
                             </div>
-                            <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-lg flex gap-2">
-                                <p className="text-xs text-amber-200/80 leading-relaxed">
-                                    Se creará una solicitud y serás redirigido a WhatsApp para completar el pedido.
-                                </p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3 pt-4">
-                                <Button
-                                    variant="outline"
-                                    onClick={onClose}
-                                    className="border-white/10 bg-transparent text-gray-300 hover:bg-white/5 hover:text-white h-10 sm:h-11 text-xs sm:text-sm"
-                                >
+                            
+                            <p className="text-xs text-[#888] bg-[#F5F5F5] p-3 rounded-lg">
+                                Serás redirigido a WhatsApp para finalizar.
+                            </p>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                                <Button variant="outline" onClick={onClose}>
                                     Cancelar
                                 </Button>
-                                <Button
-                                    onClick={handleConfirmPurchase}
-                                    disabled={isLoading}
-                                    className="bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_35px_rgba(37,99,235,0.6)] border border-blue-400/30 h-10 sm:h-11 text-xs sm:text-sm"
-                                >
-                                    {isLoading ? 'Procesando...' : 'Confirmar'}
+                                <Button onClick={handleConfirmPurchase} disabled={isLoading}>
+                                    {isLoading ? 'Cargando...' : 'Confirmar'}
                                 </Button>
                             </div>
                         </div>
                     </>
                 ) : (
                     <>
-                        <DialogHeader>
-                            <DialogTitle className="text-xl text-green-400 font-bold text-center">¡Solicitud Recibida!</DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-4 py-8">
-                            <div className="text-center">
-                                <div className="inline-block bg-green-500/10 p-6 rounded-full mb-6 border border-green-500/30 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
-                                    <svg className="w-10 h-10 text-green-400 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
-                                <h3 className="text-xl font-bold text-white mb-2">Solicitud Enviada</h3>
-                                <p className="text-gray-400 text-sm max-w-[250px] mx-auto">Tu pedido está listo. Redirigiendo a WhatsApp para finalizar la compra...</p>
+                        <div className="py-8 text-center space-y-4">
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#FAFAFA] border border-[#E5E5E5] mb-2">
+                                <CheckCircle2 className="w-8 h-8 text-[#0A0A0A]" />
                             </div>
+                            <h3 className="text-xl font-bold text-[#0A0A0A]">¡Pedido listo!</h3>
+                            <p className="text-[#666] text-sm max-w-[250px] mx-auto">Redirigiendo a WhatsApp de forma segura...</p>
                         </div>
                     </>
                 )}
