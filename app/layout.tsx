@@ -4,14 +4,14 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { SplashScreen } from '@/components/ui/splash-screen';
 
-const inter = Inter({ subsets: ["latin"], weight: ["400","500","600"] });
-const manrope = Manrope({ subsets: ["latin"], weight: ["400","600","700","800"], variable: '--font-manrope' });
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600"] });
+const manrope = Manrope({ subsets: ["latin"], weight: ["400", "600", "700", "800"], variable: '--font-manrope' });
 
 export const metadata: Metadata = {
-  title: "Pinguis",
+  title: "PINGUIS",
   description: "Los mejores productos digitales del mercado. Entrega inmediata, 100% seguro.",
   icons: {
-    icon: "/pedro.jpeg",
+    icon: "/perro.ico",
   },
 };
 
