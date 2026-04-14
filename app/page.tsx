@@ -25,6 +25,7 @@ const testimonialsData = [
 ];
 
 export default function Home() {
+  const SHOW_TEMP_404 = true;
   const { products, loading } = useProducts();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -38,6 +39,23 @@ export default function Home() {
   const scrollToProducts = () => {
     document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  if (SHOW_TEMP_404) {
+    return (
+      <div className="min-h-screen w-full bg-[#0b0f14] text-white flex items-center justify-center px-6">
+        <div className="max-w-2xl text-center">
+          <p className="text-sm uppercase tracking-[0.3em] text-[#6b7280] mb-4">Temporal</p>
+          <h1 className="text-7xl sm:text-8xl font-extrabold mb-4">404</h1>
+          <p className="text-lg sm:text-xl text-[#cbd5f5] mb-6">
+            Esta página está temporalmente fuera de servicio.
+          </p>
+          <p className="text-sm text-[#9ca3af]">
+            Vuelve a intentarlo más tarde.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-[var(--background)]">
