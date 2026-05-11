@@ -9,12 +9,14 @@ import { useCart } from '@/features/cart/store/cart.store';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/src/shared/ui/ThemeToggle';
+import { useRouter } from 'next/navigation';
 
 export function Navbar() {
   const { role } = useAuth();
   const items = useCart((state) => state.items);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -80,7 +82,15 @@ export function Navbar() {
 
         {/* Mobile */}
         <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle className="w-8 h-8" />
+          {role === 'admin' && (
+            <Link
+              href="/admin"
+              className="w-8 h-8 flex items-center justify-center border border-border text-fg hover:bg-fg hover:text-bg transition-all"
+              aria-label="Panel Control"
+            >
+              <Shield className="w-4 h-4" />
+            </Link>
+          )}
           <button
             onClick={() => { (document.querySelector('[data-cart-fab]') as HTMLButtonElement)?.click(); }}
             className="relative w-8 h-8 flex items-center justify-center border border-border text-fg hover:bg-fg hover:text-bg transition-all"
@@ -93,7 +103,6 @@ export function Navbar() {
               </span>
             )}
           </button>
-          <AuthButton className="w-8 h-8 !p-0" />
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="w-8 h-8 flex items-center justify-center text-fg"
@@ -111,36 +120,27 @@ export function Navbar() {
           style={{ backgroundColor: 'var(--bg)' }}
         >
           <div className="flex flex-col p-6 space-y-2">
-            <Link 
-              href="/#productos" 
-              onClick={() => setIsMenuOpen(false)}
-              className="group flex items-center justify-between p-6 border border-border bg-muted/20 hover:bg-fg hover:text-bg transition-all"
+            <button 
+              onClick={() => {
+                setIsMenuOpen(false);
+                router.push('/#productos');
+              }}
+              className="group flex items-center justify-between p-6 border border-border bg-muted/20 hover:bg-fg hover:text-bg transition-all w-full text-left"
             >
-              <div className="flex flex-col">
+              <div className="flex flex-col text-left">
                 <span className="text-2xl font-black uppercase tracking-tighter">Catálogo</span>
                 <span className="text-[9px] font-bold text-muted-fg uppercase tracking-widest group-hover:text-bg/60 transition-colors">Ver todos los productos</span>
               </div>
               <ShoppingBag className="w-6 h-6 opacity-40 group-hover:opacity-100 transition-all" />
-            </Link>
-
-            {role === 'admin' && (
-              <Link 
-                href="/admin" 
-                onClick={() => setIsMenuOpen(false)}
-                className="group flex items-center justify-between p-6 border border-border bg-muted/20 hover:bg-fg hover:text-bg transition-all"
-              >
-                <div className="flex flex-col">
-                  <span className="text-2xl font-black uppercase tracking-tighter">Panel Control</span>
-                  <span className="text-[9px] font-bold text-muted-fg uppercase tracking-widest group-hover:text-bg/60 transition-colors">Gestión administrativa</span>
-                </div>
-                <Shield className="w-6 h-6 opacity-40 group-hover:opacity-100 transition-all" />
-              </Link>
-            )}
+            </button>
           </div>
 
           <div className="mt-auto p-6 border-t border-border bg-muted/30">
-            <AuthButton className="w-full h-16 bg-fg text-bg font-black uppercase text-xs tracking-[0.2em] hover:bg-fg/90 transition-all" />
-            <div className="flex justify-between items-center mt-6">
+            <div className="flex items-center gap-4 mb-6">
+              <ThemeToggle className="!w-12 !h-12 [&>svg]:!w-5 [&>svg]:!h-5" />
+              <AuthButton className="!w-12 !h-12 [&_button]:!w-12 [&_button]:!h-12 [&_svg]:!w-5 [&_svg]:!h-5" />
+            </div>
+            <div className="flex justify-between items-center">
               <p className="text-[8px] font-black text-muted-fg uppercase tracking-widest">
                 © 2026 INDUSTRIAL E-COMMERCE
               </p>

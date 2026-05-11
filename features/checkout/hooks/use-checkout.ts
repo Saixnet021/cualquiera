@@ -47,8 +47,8 @@ Comprobante: ${voucherUrl}`;
 
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       
-      // Abrir WhatsApp
-      window.open(whatsappUrl, '_blank');
+      // Abrir WhatsApp redirigiendo en la misma pestaña para evitar bloqueos en celulares
+      window.location.href = whatsappUrl;
       
       // Limpiar carrito y estado solo después del éxito
       clearCart();

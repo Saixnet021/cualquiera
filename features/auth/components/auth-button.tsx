@@ -4,7 +4,7 @@
 import { useAuth } from '@/src/presentation/providers/auth.store';
 import { auth } from '@/lib/firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { LogOut, User as UserIcon, LogIn } from 'lucide-react';
+import { LogOut, User as UserIcon, UserPlus } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -46,12 +46,12 @@ export function AuthButton({ className }: { className?: string }) {
         <Link 
             href="/auth" 
             className={cn(
-                "h-9 px-4 flex items-center gap-2 border border-border bg-bg text-fg hover:bg-fg hover:text-bg font-black text-[10px] uppercase tracking-widest transition-all", 
+                "w-9 h-9 flex items-center justify-center border border-border bg-bg text-fg hover:bg-fg hover:text-bg transition-all group", 
                 className
             )}
+            aria-label="Iniciar sesión"
         >
-            <LogIn className="w-3.5 h-3.5" />
-            <span>Login</span>
+            <UserPlus className="w-4 h-4 transition-transform group-hover:scale-110" />
         </Link>
     );
 }

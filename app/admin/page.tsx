@@ -81,35 +81,7 @@ function AdminDashboard() {
             </h1>
             <p className="text-muted-fg text-xs font-bold mt-1 uppercase">{user?.email}</p>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={async () => {
-                if (!confirm('¿Deseas poblar la base de datos con 20 productos demo?')) return;
-                setIsSeeding(true);
-                try {
-                  await seedDatabase();
-                  toast.success('Base de datos poblada con éxito');
-                  window.location.reload();
-                } catch (e) {
-                  toast.error('Error al poblar');
-                } finally {
-                  setIsSeeding(false);
-                }
-              }}
-              disabled={isSeeding}
-              className="flex items-center justify-center gap-2 px-6 h-11 border border-border bg-bg text-muted-fg hover:bg-fg hover:text-bg hover:border-fg transition-all font-black uppercase text-[10px] tracking-widest disabled:opacity-50"
-            >
-              <Database className={`w-4 h-4 ${isSeeding ? 'animate-spin' : ''}`} />
-              Poblar Datos
-            </button>
-            <button
-              onClick={handleSignOut}
-              className="flex items-center justify-center gap-2 px-6 h-11 border border-border bg-bg text-muted-fg hover:bg-fg hover:text-bg hover:border-fg transition-all font-black uppercase text-[10px] tracking-widest"
-            >
-              <LogOut className="w-4 h-4" />
-              Cerrar Sesión
-            </button>
-          </div>
+
         </div>
 
         {/* Tabs */}

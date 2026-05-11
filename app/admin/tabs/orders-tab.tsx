@@ -119,12 +119,24 @@ function OrderDetailDialog({ open, order, onClose }: OrderDetailDialogProps) {
                     <p>{order.shippingData?.dni || '—'}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <Phone className="w-3.5 h-3.5 text-muted-fg shrink-0" />
-                  <div>
-                    <p className="text-[8px] text-muted-fg mb-0.5">Teléfono</p>
-                    <p>{order.shippingData?.phone || '—'}</p>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <Phone className="w-3.5 h-3.5 text-muted-fg shrink-0" />
+                    <div>
+                      <p className="text-[8px] text-muted-fg mb-0.5">Teléfono</p>
+                      <p>{order.shippingData?.phone || '—'}</p>
+                    </div>
                   </div>
+                  {order.shippingData?.phone && (
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="h-7 text-[9px] font-black uppercase"
+                      onClick={() => window.open(`https://wa.me/51${order.shippingData?.phone.replace(/\D/g,'')}`, '_blank')}
+                    >
+                      Contactar
+                    </Button>
+                  )}
                 </div>
                 <div className="pt-3 border-t border-border mt-1 space-y-3">
                   <div className="flex items-start gap-3">
