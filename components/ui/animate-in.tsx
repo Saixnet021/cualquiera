@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 interface AnimateInProps {
     children: React.ReactNode;
     className?: string;
-    animation?: 'fade-in' | 'slide-up' | 'slide-down' | 'scale-in';
+    animation?: 'fade-in' | 'slide-up' | 'slide-down' | 'scale-in' | 'slide-right' | 'slide-left';
     delay?: number;
     threshold?: number;
 }
@@ -48,6 +48,8 @@ export function AnimateIn({
         switch (animation) {
             case 'slide-up': return 'opacity-0 translate-y-12 blur-[8px]';
             case 'slide-down': return 'opacity-0 -translate-y-12 blur-[8px]';
+            case 'slide-right': return 'opacity-0 -translate-x-12 blur-[8px]';
+            case 'slide-left': return 'opacity-0 translate-x-12 blur-[8px]';
             case 'scale-in': return 'opacity-0 scale-90 blur-[8px]';
             default: return 'opacity-0 blur-[8px]';
         }
@@ -57,6 +59,8 @@ export function AnimateIn({
         switch (animation) {
             case 'slide-up':
             case 'slide-down': return 'opacity-100 translate-y-0 blur-0';
+            case 'slide-right':
+            case 'slide-left': return 'opacity-100 translate-x-0 blur-0';
             case 'scale-in': return 'opacity-100 scale-100 blur-0';
             default: return 'opacity-100 blur-0';
         }
