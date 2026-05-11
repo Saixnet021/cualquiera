@@ -6,12 +6,14 @@ export interface Product {
   stock: number;
   imageUrl: string;
   category: string;
-  whatsappNumber: string;
+
   createdAt: Date;
+  variants?: { size: string; stock: number }[];
 }
 
 export interface CartItem extends Product {
   quantity: number;
+  size?: string;
 }
 
 export interface User {

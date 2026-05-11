@@ -5,26 +5,26 @@ import { AnimateIn } from './animate-in';
 interface SectionProps extends React.HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
     container?: boolean;
-    background?: 'white' | 'gray' | 'dark';
+    background?: 'primary' | 'muted' | 'none';
 }
 
 export function Section({
     children,
     className,
     container = true,
-    background = 'white',
+    background = 'none',
     ...props
 }: SectionProps) {
     const bgColors = {
-        white: 'bg-white',
-        gray: 'bg-[#FAFAFA]',
-        dark: 'bg-[#0A0A0A]',
+        primary: 'bg-bg',
+        muted: 'bg-muted',
+        none: '',
     };
 
     return (
         <section
             className={cn(
-                'w-full py-16 md:py-20',
+                'w-full py-16 md:py-24',
                 bgColors[background],
                 className
             )}
@@ -42,7 +42,6 @@ interface SectionHeaderProps {
     titleClassName?: string;
     descriptionClassName?: string;
     align?: 'left' | 'center' | 'right';
-    textColor?: 'dark' | 'light';
 }
 
 export function SectionHeader({
@@ -52,26 +51,23 @@ export function SectionHeader({
     titleClassName,
     descriptionClassName,
     align = 'center',
-    textColor = 'dark'
 }: SectionHeaderProps) {
     return (
-        <AnimateIn animation="fade-in" className={cn('mb-12', className)}>
+        <AnimateIn animation="fade-in" className={cn('mb-16', className)}>
             <div className={cn(
-                'flex flex-col gap-2',
+                'flex flex-col gap-4',
                 align === 'center' && 'items-center text-center',
                 align === 'right' && 'items-end text-right',
             )}>
                 <h2 className={cn(
-                    'text-3xl md:text-4xl font-extrabold tracking-tight',
-                    textColor === 'dark' ? 'text-[#0A0A0A]' : 'text-white',
+                    'text-4xl md:text-5xl font-black tracking-tighter text-fg uppercase',
                     titleClassName
                 )}>
                     {title}
                 </h2>
                 {description && (
                     <p className={cn(
-                        'text-sm sm:text-base',
-                        textColor === 'dark' ? 'text-[#666]' : 'text-[#999]',
+                        'text-xs font-black uppercase tracking-widest text-muted-fg',
                         descriptionClassName
                     )}>
                         {description}

@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -50,7 +51,7 @@ const DialogOverlay = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'fixed inset-0 z-50 bg-black/40 backdrop-blur-sm animate-in fade-in-0',
+      'fixed inset-0 z-50 bg-bg/80 backdrop-blur-sm animate-in fade-in-0',
       className
     )}
     {...props}
@@ -77,7 +78,7 @@ const DialogContent = React.forwardRef<
         role="dialog"
         aria-modal="true"
         className={cn(
-          'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-[var(--border)] bg-[#111827] text-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.8)] animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%] sm:rounded-2xl',
+          'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-bg text-fg p-8 shadow-none animate-in fade-in-0 zoom-in-95 slide-in-from-left-1/2 slide-in-from-top-[48%] rounded-none',
           className
         )}
         {...props}
@@ -85,7 +86,7 @@ const DialogContent = React.forwardRef<
         {children}
         <button
           onClick={handleClose}
-          className="absolute right-4 top-4 rounded-full p-2 opacity-70 transition-all hover:opacity-100 hover:bg-[#F5F5F5] focus:outline-none text-[#666] hover:text-[#0A0A0A]"
+          className="absolute right-4 top-4 opacity-50 transition-all hover:opacity-100 hover:bg-muted p-2"
         >
           <X className="h-4 w-4" />
           <span className="sr-only">Cerrar</span>
@@ -97,24 +98,29 @@ const DialogContent = React.forwardRef<
 DialogContent.displayName = 'DialogContent';
 
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left text-white', className)} {...props} />
+  <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left text-fg', className)} {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
 const DialogTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h2 ref={ref} className={cn('text-lg font-bold leading-none tracking-tight text-white mb-2', className)} {...props} />
+    <h2 ref={ref} className={cn('text-xl font-black leading-none tracking-tighter text-fg uppercase mb-2', className)} {...props} />
   )
 );
 DialogTitle.displayName = 'DialogTitle';
 
 const DialogDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('text-sm text-[#666]', className)} {...props} />
+    <p ref={ref} className={cn('text-xs font-black uppercase tracking-widest text-muted-fg', className)} {...props} />
   )
 );
 DialogDescription.displayName = 'DialogDescription';
 
+const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4', className)} {...props} />
+);
+DialogFooter.displayName = 'DialogFooter';
+
 export {
-  Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogHeader, DialogTitle, DialogDescription,
+  Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 };

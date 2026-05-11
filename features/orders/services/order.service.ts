@@ -1,30 +1,10 @@
+/**
+ * Order Service — features/orders (compatibility layer)
+ * 
+ * Redirige a la nueva arquitectura limpia.
+ * Los nuevos componentes deberían usar directamente los use-cases.
+ */
+export { FirebaseOrderRepository } from '@/src/infrastructure/firebase/order.repository';
 
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-
-export interface CreateOrderDTO {
-    userEmail: string;
-    items: Array<{
-        id: string;
-        name: string;
-        price: number;
-        quantity: number;
-        imageUrl: string;
-        category: string;
-    }>;
-    total: number;
-    status: string;
-    createdAt: Date;
-}
-
-export const OrderService = {
-    async create(orderData: CreateOrderDTO): Promise<string> {
-        try {
-            const docRef = await addDoc(collection(db, 'orders'), orderData);
-            return docRef.id;
-        } catch (error) {
-            console.error('Error al crear la orden:', error);
-            throw error;
-        }
-    }
-};
+// Re-export DTO para compatibilidad
+export type { CreateOrderDTO } from '@/src/application/dtos/order.dto';

@@ -1,28 +1,34 @@
+'use client';
 
-import { useState, useEffect } from 'react';
-import { Product } from '@/types';
-import { ProductService } from '../services/product.service';
+/**
+ * useProducts Hook — usa GetProductsUseCase
+ */
+import { useState, useEffect, useCallback } from 'react';
+import { FirebaseProductRepository } from '@/src/infrastructure/firebase/product.repository';
+import { GetProductsUseCase } from '@/src/application/products/get-products.usecase';
+import type { ProductEntity } from '@/src/domain/entities/product.entity';
+
+const productRepo = new FirebaseProductRepository();
+const getProductsUseCase = new GetProductsUseCase(productRepo);
 
 export function useProducts() {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+  const [products, setProducts] = useState<ProductEntity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        loadProducts();
-    }, []);
+  const loadProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getProductsUseCase.execute();
+      setProducts(data);
+    } catch (err) {
+      setError(err as Error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    const loadProducts = async () => {
-        try {
-            setLoading(true);
-            const data = await ProductService.getAll();
-            setProducts(data);
-        } catch (err) {
-            setError(err as Error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  useEffect(() => { loadProducts(); }, [loadProducts]);
 
-    return { products, loading, error, refresh: loadProducts };
+  return { products, loading, error, refresh: loadProducts };
 }

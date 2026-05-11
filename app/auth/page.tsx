@@ -1,13 +1,13 @@
+
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '@/store/auth';
+import { useAuth } from '@/src/presentation/providers/auth.store';
 import { auth } from '@/lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { AlertCircle } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -20,27 +20,20 @@ export default function AuthPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const { setUser } = useAuth();
     const router = useRouter();
 
     const getFriendlyErrorMessage = (errorCode: string) => {
         switch (errorCode) {
             case 'auth/email-already-in-use':
-                return 'Este correo electrónico ya está registrado. Por favor, inicia sesión.';
+                return 'EL CORREO YA ESTÁ REGISTRADO.';
             case 'auth/invalid-credential':
             case 'auth/wrong-password':
             case 'auth/user-not-found':
-                return 'Credenciales incorrectas. Verifica tu correo y contraseña.';
+                return 'CREDENCIALES INCORRECTAS.';
             case 'auth/weak-password':
-                return 'La contraseña es muy débil. Debe tener al menos 6 caracteres.';
-            case 'auth/invalid-email':
-                return 'El formato del correo electrónico no es válido.';
-            case 'auth/too-many-requests':
-                return 'Demasiados intentos fallidos. Por favor, intenta más tarde.';
-            case 'auth/network-request-failed':
-                return 'Error de red. Verifica tu conexión a internet.';
+                return 'LA CONTRASEÑA ES MUY DÉBIL.';
             default:
-                return 'Ocurrió un error inesperado al procesar tu solicitud.';
+                return 'ERROR AL PROCESAR LA SOLICITUD.';
         }
     };
 
@@ -54,7 +47,7 @@ export default function AuthPage() {
                 await signInWithEmailAndPassword(auth, email, password);
             } else {
                 if (password !== confirmPassword) {
-                    setErrorMsg("Las contraseñas no coinciden. Intenta de nuevo.");
+                    setErrorMsg("LAS CONTRASEÑAS NO COINCIDEN.");
                     setLoading(false);
                     return;
                 }
@@ -68,99 +61,92 @@ export default function AuthPage() {
                         createdAt: new Date(),
                         role: 'user'
                     });
-                } catch (error) { console.error("Error saving user data:", error); }
+                } catch (error) { console.error("Error al guardar datos del usuario:", error); }
             }
             router.push('/');
         } catch (error: any) { 
-            console.error(error);
             setErrorMsg(getFriendlyErrorMessage(error.code)); 
         } 
         finally { setLoading(false); }
     };
 
     return (
-        <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4">
+        <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-6">
             <div className="w-full max-w-sm">
                 {/* Header */}
-                <div className="mb-8 text-center animate-fade-in">
-                    <div className="w-16 h-16 relative mx-auto mb-4 rounded-full overflow-hidden border border-[#1e293b]">
-                        <Image src="/pedro.jpeg" alt="Logo" fill className="object-cover" />
-                    </div>
-                    <h1 className="text-2xl font-bold text-white tracking-tight">
-                        {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
+                <div className="mb-10 text-center">
+                    <div className="w-12 h-12 bg-fg text-bg flex items-center justify-center font-black text-2xl mx-auto mb-6">E</div>
+                    <h1 className="text-3xl font-black text-fg uppercase tracking-tighter">
+                        {isLogin ? 'Iniciar Sesión' : 'Registrarse'}
                     </h1>
-                    <p className="text-[#9ca3af] mt-2 text-sm">
-                        {isLogin ? 'Ingresa para continuar' : 'Regístrate'}
+                    <p className="text-muted-fg mt-2 text-[10px] font-black uppercase tracking-widest">
+                        {isLogin ? 'Accede a tu cuenta' : 'Únete a la plataforma'}
                     </p>
                 </div>
 
                 {/* Form */}
-                <div className="border border-[#262a31] bg-[#10141a] rounded-2xl p-6 sm:p-8 shadow-[0_4px_25px_rgba(0,0,0,0.5)]">
+                <div className="border border-border bg-bg p-8 shadow-none space-y-6">
                     {errorMsg && (
-                        <div className="animate-fade-in mb-6 bg-red-900/30 border border-red-500/50 text-red-200 p-3 rounded-lg text-sm flex items-start gap-3 shadow-lg">
-                            <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+                        <div className="bg-bg border border-red-500 text-red-500 p-4 text-[10px] font-black uppercase flex items-center gap-3">
+                            <AlertCircle className="w-4 h-4 shrink-0" />
                             <p>{errorMsg}</p>
                         </div>
                     )}
                     
-                    <form onSubmit={handleAuth} className="space-y-4">
+                    <form onSubmit={handleAuth} className="space-y-5">
                         {!isLogin && (
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-[#9ca3af] uppercase tracking-wide">Nombre</label>
+                                <label className="text-[10px] font-black text-muted-fg uppercase tracking-widest">Nombre Completo</label>
                                 <Input
-                                    type="text" placeholder="Tu nombre"
+                                    type="text" placeholder="NOMBRE"
                                     value={name} onChange={(e) => setName(e.target.value)}
                                     required
-                                    className="bg-[#1e293b] border-none text-white placeholder:text-[#64748b]"
                                 />
                             </div>
                         )}
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-[#9ca3af] uppercase tracking-wide">Email</label>
+                            <label className="text-[10px] font-black text-muted-fg uppercase tracking-widest">Correo Electrónico</label>
                             <Input
-                                type="email" placeholder="tu@email.com"
+                                type="email" placeholder="CORREO@EJEMPLO.COM"
                                 value={email} onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="bg-[#1e293b] border-none text-white placeholder:text-[#64748b]"
                             />
                         </div>
                         <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-[#9ca3af] uppercase tracking-wide">Contraseña</label>
+                            <label className="text-[10px] font-black text-muted-fg uppercase tracking-widest">Contraseña</label>
                             <Input
                                 type="password" placeholder="••••••••"
                                 value={password} onChange={(e) => setPassword(e.target.value)}
                                 required
-                                className="bg-[#1e293b] border-none text-white placeholder:text-[#64748b]"
                             />
                         </div>
                         
                         {!isLogin && (
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-[#9ca3af] uppercase tracking-wide">Confirmar Contraseña</label>
+                                <label className="text-[10px] font-black text-muted-fg uppercase tracking-widest">Confirmar Contraseña</label>
                                 <Input
                                     type="password" placeholder="••••••••"
                                     value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
                                     required
-                                    className="bg-[#1e293b] border-none text-white placeholder:text-[#64748b]"
                                 />
                             </div>
                         )}
 
-                        <Button type="submit" className="w-full mt-2" disabled={loading}>
-                            {loading ? 'Cargando...' : isLogin ? 'Ingresar' : 'Registrarse'}
+                        <Button type="submit" className="w-full h-12 mt-4 bg-fg text-bg hover:opacity-80 font-black uppercase text-sm tracking-tighter rounded-none" disabled={loading}>
+                            {loading ? 'PROCESANDO...' : isLogin ? 'Ingresar al Portal' : 'Crear Registro'}
                         </Button>
 
-                        <div className="relative flex items-center gap-2 py-4">
-                            <div className="flex-1 h-px bg-[#1e293b]" />
-                            <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest">Ó</span>
-                            <div className="flex-1 h-px bg-[#1e293b]" />
+                        <div className="relative flex items-center gap-4 py-4">
+                            <div className="flex-1 h-px bg-border" />
+                            <span className="text-[8px] font-black text-muted-fg uppercase tracking-widest">Ó</span>
+                            <div className="flex-1 h-px bg-border" />
                         </div>
 
                         <Button
                             type="button" onClick={() => setIsLogin(!isLogin)}
-                            variant="secondary" className="w-full text-xs"
+                            variant="ghost" className="w-full h-12 text-[10px] font-black uppercase tracking-widest hover:bg-muted"
                         >
-                            {isLogin ? 'Crear una cuenta nueva' : 'Ya tengo cuenta'}
+                            {isLogin ? 'Crear Cuenta Nueva' : 'Ya tengo cuenta'}
                         </Button>
                     </form>
                 </div>

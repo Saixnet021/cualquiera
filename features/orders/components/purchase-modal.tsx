@@ -6,7 +6,7 @@ import { Product } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { formatPrice } from '@/lib/utils';
-import { useAuth } from '@/features/auth/store/auth.store';
+import { useAuth } from '@/src/presentation/providers/auth.store';
 import { useOrder } from '../hooks/use-order';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -51,18 +51,24 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
     const handleConfirmPurchase = async () => {
         try {
             const orderData = {
+                userId: user?.uid || '',
                 userEmail: user?.email || 'guest@example.com',
+                userName: user?.displayName || '',
                 items: [{
                     id: product.id,
                     name: product.name,
                     price: product.price,
                     quantity: 1,
                     imageUrl: product.imageUrl,
-                    category: product.category
+                    category: product.category,
+                    description: product.description || '',
+                    stock: product.stock,
+                    createdAt: product.createdAt,
                 }],
                 total: product.price,
-                status: 'pending',
-                createdAt: new Date(),
+                discount: 0,
+                finalTotal: product.price,
+                whatsappSent: false,
             };
 
             await createOrder(orderData);
@@ -70,7 +76,7 @@ export function PurchaseModal({ isOpen, product, onClose }: PurchaseModalProps) 
 
             setTimeout(() => {
                 const message = `Hola, quiero comprar: ${product.name} por ${formatPrice(product.price)}`;
-                const phoneNumber = product.whatsappNumber || '51937074085';
+                const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '51937074085';
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
                 onClose();

@@ -20,11 +20,11 @@ export function PromoBanner({ className }: PromoBannerProps) {
                 <div key={i} className="flex items-center gap-12">
                     {items.map((item, index) => (
                         <div key={index} className="flex items-center gap-3">
-                            <item.icon className="w-4 h-4 text-white/60 shrink-0" />
-                            <span className="text-sm font-bold text-white uppercase tracking-wider whitespace-nowrap">
+                            <item.icon className="w-3.5 h-3.5 text-muted-fg shrink-0" />
+                            <span className="text-[10px] font-black text-fg uppercase tracking-widest whitespace-nowrap">
                                 {item.text}
                             </span>
-                            <span className="text-white/20 text-xl font-black mx-8 select-none">·</span>
+                            <span className="text-muted-fg/30 text-xl font-black mx-8 select-none">·</span>
                         </div>
                     ))}
                 </div>
@@ -33,7 +33,7 @@ export function PromoBanner({ className }: PromoBannerProps) {
     );
 
     return (
-        <div className={cn("w-full overflow-hidden bg-[#0A0A0A] py-3", className)}>
+        <div className={cn("w-full overflow-hidden bg-bg border-y border-border py-2", className)}>
             <div className="flex w-fit animate-marquee">
                 <ContentBlock />
                 <ContentBlock />

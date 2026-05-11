@@ -1,86 +1,75 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ProductCard } from '@/features/products/components/product-card';
 import { Cart } from '@/features/cart/components/cart';
 import { useProducts } from '@/features/products/hooks/use-products';
-import { ArrowRight, Star, Shield, Zap, Package, Headphones, CheckCircle2, ChevronRight, Check, Award, ArrowUpRight, Plus, ShoppingCart, Info, Search, CreditCard, Truck, X, ArrowDown } from 'lucide-react';
+import { useCategories } from '@/features/catalog/hooks/use-categories';
+import { ArrowRight, Star, Shield, Zap, Package, Headphones, CheckCircle2, ChevronRight, Check, Award, ArrowUpRight, Plus, ShoppingCart, Info, Search, CreditCard, Truck, X, ArrowDown, LayoutGrid, Filter } from 'lucide-react';
 import { PromoBanner } from '@/components/ui/promo-banner';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { Section, SectionHeader } from '@/components/ui/section';
+import { Section } from '@/components/ui/section';
 import { AnimateIn } from '@/components/ui/animate-in';
 import { Carousel } from '@/components/ui/carousel';
 import { ProductCardSkeleton, CarouselSkeleton } from '@/components/ui/skeleton';
-import { ProductCarousel } from '@/components/ui/product-carousel';
 import { TestimonialsCarousel } from '@/components/ui/testimonials-carousel';
 import { formatPrice } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 const testimonialsData = [
   { name: "Said F.", comment: "Excelente servicio, recibí mi producto al instante. La activación fue super rápida y funciona perfecto. 100% recomendado.", initials: "SF" },
   { name: "Ana L.", comment: "Precios increíbles y la atención por WhatsApp es rápida. Es muy confiable el sistema.", initials: "AL" },
   { name: "Diego P.", comment: "Ya llevo más de 5 compras y siempre cumplen. Soporte excelente, la mejor opción.", initials: "DP" },
-
 ];
 
 export default function Home() {
-  const SHOW_TEMP_404 = true;
   const { products, loading } = useProducts();
+  const { categories, loading: loadingCats } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const normalizedSearch = searchTerm.trim().toLowerCase();
-  const filteredProducts = normalizedSearch
-    ? products.filter((p) => p.name?.toLowerCase().includes(normalizedSearch))
-    : products;
+  const filteredProducts = useMemo(() => {
+    return products.filter((p) => {
+      const matchesSearch = p.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory ? p.category === selectedCategory : true;
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchTerm, selectedCategory]);
 
-  const featuredProducts = products.slice(0, 8); // more products for carousel
+  const featuredProducts = products.slice(0, 3);
+  const newArrivals = products.slice(0, 4);
 
   const scrollToProducts = () => {
-    document.getElementById('productos')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  if (SHOW_TEMP_404) {
-    return (
-      <div className="min-h-screen w-full bg-[#0b0f14] text-white flex items-center justify-center px-6">
-        <div className="max-w-2xl text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#6b7280] mb-4">Temporal</p>
-          <h1 className="text-7xl sm:text-8xl font-extrabold mb-4">404</h1>
-          <p className="text-lg sm:text-xl text-[#cbd5f5] mb-6">
-            Esta página está temporalmente fuera de servicio.
-          </p>
-          <p className="text-sm text-[#9ca3af]">
-            Vuelve a intentarlo más tarde.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full min-h-screen bg-[var(--background)]">
+    <div className="w-full min-h-screen bg-bg">
 
       {/* ===== HERO ===== */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#10141a]">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#1d4ed8]/15 rounded-full blur-[120px] pointer-events-none"></div>
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-bg">
+        <div className="absolute inset-0 bg-[radial-gradient(var(--border)_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-20"></div>
 
         <div className="max-w-[90rem] mx-auto px-6 w-full relative z-10 pt-20">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-12 lg:gap-16 items-center">
             {/* Text */}
             <AnimateIn animation="slide-down">
-              {/* <div className="inline-block px-3 py-1 mb-6 rounded-md border border-blue-500/20 bg-blue-500/10">
-                <p className="text-blue-400 text-[10px] font-bold tracking-widest uppercase">Bienvenido</p>
-              </div> */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight">
-                Productos<br />
-                <span className="text-[var(--primary)]">Digitales</span><br />
-
+              <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-fg leading-[0.95] mb-6 tracking-tighter uppercase">
+                Tienda<br />
+                Industrial<br />
+                Premium
               </h1>
-              <p className="text-[#9ca3af] text-base sm:text-lg mb-10 max-w-md leading-relaxed font-medium">
-                Todo lo que necesitas en un solo lugar. Entrega inmediata, soporte especializado y garantía total respaldada por expertos.
+              <p className="text-muted-fg text-base sm:text-lg mb-10 max-w-md leading-tight font-medium uppercase tracking-tight">
+                La nueva era del e-commerce. Diseño técnico, velocidad extrema y una experiencia de compra minimalista.
               </p>
 
-
+              <div className="flex flex-wrap gap-4">
+                <Button onClick={scrollToProducts} className="bg-fg text-bg hover:opacity-80 h-14 px-10 font-black uppercase text-sm rounded-none tracking-widest shadow-xl">
+                  Explorar Catálogo <ArrowRight className="ml-2 w-4 h-4" />
+                </Button>
+              </div>
             </AnimateIn>
 
             {/* Carousel */}
@@ -88,45 +77,21 @@ export default function Home() {
               {loading ? (
                 <CarouselSkeleton />
               ) : featuredProducts.length > 0 ? (
-                <div className="shadow-2xl shadow-black/50 rounded-2xl">
+                <div className="border border-border bg-bg p-2 shadow-2xl">
                   <Carousel autoPlay interval={5000} showArrows showDots slideClassName="transition-opacity duration-500">
-                    {featuredProducts.slice(0, 3).map((product) => (
-                      <div key={product.id} className="relative h-[480px] rounded-2xl overflow-hidden bg-[#111]">
+                    {featuredProducts.map((product) => (
+                      <div key={product.id} className="relative h-[520px] overflow-hidden bg-muted">
                         {product.imageUrl ? (
-                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover transition-all duration-700" />
                         ) : (
                           <div className="flex items-center justify-center h-full">
-                            <Package className="w-20 h-20 text-[#333]" />
+                            <Package className="w-20 h-20 text-border" />
                           </div>
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent p-8">
-                          <h3 className="text-white font-bold text-2xl mb-1">{product.name}</h3>
-                          <span className="text-white font-extrabold text-3xl">{formatPrice(product.price)}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </Carousel>
-                </div>
-              ) : null}
-            </AnimateIn>
-
-            {/* Mobile carousel */}
-            <AnimateIn animation="scale-in" className="lg:hidden">
-              {loading ? <CarouselSkeleton /> : featuredProducts.length > 0 ? (
-                <div className="shadow-xl rounded-xl">
-                  <Carousel autoPlay interval={5000} showDots>
-                    {featuredProducts.slice(0, 3).map((product) => (
-                      <div key={product.id} className="relative h-72 rounded-xl overflow-hidden bg-[#111]">
-                        {product.imageUrl ? (
-                          <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
-                        ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <Package className="w-16 h-16 text-[#333]" />
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 to-transparent p-5">
-                          <h3 className="text-white font-bold text-xl mb-1">{product.name}</h3>
-                          <span className="text-white font-extrabold text-2xl">{formatPrice(product.price)}</span>
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-bg via-bg/80 to-transparent p-10">
+                          <div className="text-[10px] font-black uppercase tracking-widest text-muted-fg mb-2">{product.category}</div>
+                          <h3 className="text-fg font-black text-3xl mb-1 uppercase tracking-tighter">{product.name}</h3>
+                          <span className="text-fg font-black text-4xl tracking-tighter">{formatPrice(product.price)}</span>
                         </div>
                       </div>
                     ))}
@@ -137,59 +102,91 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <button onClick={scrollToProducts} className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[#444] hover:text-[var(--primary)] transition-colors" aria-label="Ir a productos">
-          <ArrowDown className="w-6 h-6 animate-pulse-soft" />
+        <button onClick={scrollToProducts} className="absolute bottom-10 left-1/2 -translate-x-1/2 text-muted-fg hover:text-fg transition-colors group" aria-label="Ir a productos">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] block mb-2 opacity-0 group-hover:opacity-100 transition-opacity">Deslizar</span>
+          <ArrowDown className="w-6 h-6 animate-bounce mx-auto" />
         </button>
       </section>
 
-
-      {/* ===== PROMO BANNER ===== */}
       <PromoBanner />
 
-      {/* ===== FEATURED PRODUCTS CAROUSEL =====
-      <Section className="py-20 md:py-24 bg-[var(--background)]">
+      {/* ===== NUEVAS ENTRADAS ===== */}
+      <Section className="py-20 bg-bg">
         <div className="max-w-7xl mx-auto px-4 w-full">
-          <div className="mb-10 text-left">
-            <h2 className="text-3xl font-extrabold text-white mb-3">Productos Destacados</h2>
-            <p className="text-[#9ca3af]">Descubre los favoritos de nuestra comunidad.</p>
-          </div>
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => <ProductCardSkeleton key={i} />)}
-            </div>
-          ) : featuredProducts.length > 0 ? (
-            <AnimateIn animation="scale-in">
-              <ProductCarousel products={featuredProducts} />
-            </AnimateIn>
-          ) : null}
-        </div>
-      </Section> */}
-
-      {/* ===== CATÁLOGO GRID ===== */}
-      <Section id="productos" className="py-20 md:py-24 bg-[var(--background)] border-y border-[var(--border)]">
-        <div className="max-w-7xl mx-auto px-4 w-full">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <div className="flex items-end justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-extrabold text-white mb-2">Catálogo</h2>
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-fg mb-2">Recién Llegado</div>
+              <h2 className="text-4xl font-black text-fg uppercase tracking-tighter">Nuevas Entradas</h2>
+            </div>
+            <div className="hidden md:block h-px flex-1 bg-border mx-10 mb-3"></div>
+            <Button variant="outline" onClick={scrollToProducts} className="text-[10px] tracking-widest">Ver Todo</Button>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {loading ? (
+              [...Array(4)].map((_, i) => <ProductCardSkeleton key={i} />)
+            ) : newArrivals.map((product, i) => (
+              <AnimateIn key={product.id} animation="scale-in" delay={i * 0.1}>
+                <ProductCard product={product} />
+              </AnimateIn>
+            ))}
+          </div>
+        </div>
+      </Section>
 
+      {/* ===== CATÁLOGO SECTION ===== */}
+      <Section id="catalog" className="py-24 bg-bg border-y border-border relative">
+        <div className="max-w-7xl mx-auto px-4 w-full">
+          
+          {/* Filtering Header */}
+          <div className="flex flex-col gap-10 mb-16">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+              <h2 className="text-5xl font-black text-fg uppercase tracking-tighter">Catálogo Completo</h2>
+              
+              <div className="relative flex items-center border border-border bg-input-bg px-6 h-14 w-full md:w-[400px] focus-within:border-fg transition-all">
+                <Search className="w-5 h-5 text-muted-fg" />
+                <input
+                  type="text"
+                  placeholder="BUSCAR PRODUCTO..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-transparent border-none outline-none px-4 text-[10px] font-black uppercase tracking-widest w-full text-fg placeholder:text-muted-fg"
+                />
+                {searchTerm && (
+                  <button onClick={() => setSearchTerm('')} className="text-muted-fg hover:text-fg p-2">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="relative flex items-center border-2 border-[var(--border)] rounded-full bg-[#111827] px-5 py-1.5 focus-within:border-[var(--primary)] focus-within:shadow-[0_0_0_4px_rgba(59,130,246,0.1)] transition-all">
-              <Search className="w-5 h-5 text-[var(--primary)]" />
-              <input
-                type="text"
-                placeholder="Buscar por nombre..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-transparent border-none outline-none px-3 py-2 text-sm w-full md:w-64 text-white placeholder:text-[#64748b]"
-              />
-              {searchTerm && (
-                <button onClick={() => setSearchTerm('')} className="text-[#64748b] hover:text-[#9ca3af]">
-                  <X className="w-4 h-4" />
+            {/* Category Pills */}
+            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-8">
+              <div className="flex items-center gap-2 mr-4 text-muted-fg">
+                <Filter className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Categoría:</span>
+              </div>
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={cn(
+                  "px-5 h-9 text-[10px] font-black uppercase tracking-widest border transition-all",
+                  !selectedCategory ? "bg-fg text-bg border-fg" : "bg-bg text-fg border-border hover:border-fg"
+                )}
+              >
+                Todas
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.name)}
+                  className={cn(
+                    "px-5 h-9 text-[10px] font-black uppercase tracking-widest border transition-all",
+                    selectedCategory === cat.name ? "bg-fg text-bg border-fg" : "bg-bg text-fg border-border hover:border-fg"
+                  )}
+                >
+                  {cat.name}
                 </button>
-              )}
+              ))}
             </div>
           </div>
 
@@ -198,22 +195,18 @@ export default function Home() {
               {[...Array(8)].map((_, i) => <ProductCardSkeleton key={i} />)}
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-20">
-              <Package className="w-14 h-14 text-[#E5E5E5] mx-auto mb-5" />
-              <h3 className="text-xl font-bold text-[#0A0A0A] mb-2">
-                {searchTerm ? 'No hay resultados' : 'Catálogo vacío'}
-              </h3>
-              <p className="text-sm text-[#666] mb-6 max-w-sm mx-auto">
-                {searchTerm ? `No encontramos elementos para "${searchTerm}".` : 'Los productos estarán disponibles pronto.'}
+            <div className="text-center py-32 border border-dashed border-border bg-muted/30">
+              <Package className="w-16 h-16 text-muted-fg/20 mx-auto mb-6" />
+              <h3 className="text-2xl font-black text-fg mb-3 uppercase tracking-tighter">Sin Resultados</h3>
+              <p className="text-[10px] text-muted-fg mb-8 max-w-xs mx-auto uppercase font-bold tracking-widest">
+                No encontramos productos en {selectedCategory || 'esta selección'} que coincidan con tu búsqueda.
               </p>
-              {searchTerm && (
-                <Button onClick={() => setSearchTerm('')} variant="outline">Limpiar búsqueda</Button>
-              )}
+              <Button variant="outline" onClick={() => { setSearchTerm(''); setSelectedCategory(null); }}>Limpiar Filtros</Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-y-10">
               {filteredProducts.map((product, i) => (
-                <AnimateIn key={product.id} animation="scale-in" delay={i * 0.03}>
+                <AnimateIn key={product.id} animation="scale-in" delay={i * 0.02}>
                   <ProductCard product={product} />
                 </AnimateIn>
               ))}
@@ -222,30 +215,61 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ===== CÓMO FUNCIONA ===== */}
-      <section className="py-20 md:py-28 bg-[var(--background)] border-y border-[var(--border)]">
+      {/* ===== INFO SECTION ===== */}
+      <section className="py-24 bg-bg overflow-hidden">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="mb-14 text-center">
-            <h2 className="text-3xl font-extrabold text-white mb-3">¿Cómo Funciona?</h2>
-            <p className="text-[#9ca3af]">Comienza en tres sencillos pasos.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+            <AnimateIn animation="slide-right">
+              <div className="relative h-[500px] border border-border p-3">
+                <Image src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=800" alt="Nosotros" fill className="object-cover" />
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-fg text-bg flex items-center justify-center font-black text-4xl p-10">24/7</div>
+              </div>
+            </AnimateIn>
+            <AnimateIn animation="slide-left">
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-fg mb-4">Nuestro Compromiso</div>
+              <h2 className="text-5xl font-black text-fg uppercase tracking-tighter mb-8 leading-[0.9]">Calidad sin Concesiones</h2>
+              <p className="text-muted-fg text-sm uppercase font-bold leading-relaxed mb-8">
+                Cada pieza de nuestro catálogo es seleccionada bajo estrictos estándares industriales. No vendemos solo productos, vendemos una visión de diseño y funcionalidad.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "Certificación de Calidad Premium",
+                  "Soporte Técnico Especializado",
+                  "Logística Industrial Optimizada",
+                  "Garantía Global de Satisfacción"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-fg">
+                    <div className="w-1.5 h-1.5 bg-fg"></div>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </AnimateIn>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6 relative mt-16">
-            {/* Visual connector line desktop */}
-            <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent z-0" />
+        </div>
+      </section>
 
+      {/* ===== CÓMO FUNCIONA ===== */}
+      <section className="py-24 md:py-32 bg-muted/30 border-t border-border">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="mb-20 text-center">
+            <h2 className="text-4xl font-black text-fg uppercase tracking-tighter">Flujo de Compra</h2>
+            <div className="w-12 h-1 bg-fg mx-auto mt-4"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-10 relative">
             {[
-              { num: "01", icon: Package, title: "Elige", desc: "Selecciona el producto que se adapte a ti" },
-              { num: "02", icon: CreditCard, title: "Paga", desc: "Realiza tu compra segura vía WhatsApp" },
-              { num: "03", icon: Truck, title: "Recibe", desc: "Obtén tu pedido en cuestión de minutos" },
+              { num: "01", icon: LayoutGrid, title: "Curaduría", desc: "Navega por nuestro catálogo curado industrialmente." },
+              { num: "02", icon: Shield, title: "Protocolo", desc: "Tus transacciones están protegidas por encriptación avanzada." },
+              { num: "03", icon: Zap, title: "Despliegue", desc: "Recibe tu pedido mediante nuestra red logística de alta velocidad." },
             ].map((item, i) => (
               <AnimateIn key={i} animation="slide-up" delay={i * 0.15}>
-                <div className="text-center relative z-10 flex flex-col items-center">
-                  <span className="text-7xl font-extrabold text-[#1e293b] absolute -top-10 z-0 tracking-tighter opacity-50">{item.num}</span>
-                  <div className="w-16 h-16 rounded-2xl border border-[var(--border)] flex items-center justify-center mx-auto mb-6 bg-[#111827] relative z-10 shadow-lg">
-                    <item.icon className="w-7 h-7 text-[var(--primary)]" />
+                <div className="text-center relative z-10 flex flex-col items-center group">
+                  <span className="text-9xl font-black text-fg/5 absolute -top-16 z-0 tracking-tighter select-none">{item.num}</span>
+                  <div className="w-20 h-20 border border-border flex items-center justify-center mx-auto mb-8 bg-bg relative z-10 transition-all group-hover:scale-110 group-hover:border-fg text-fg">
+                    <item.icon className="w-8 h-8" />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#9ca3af] max-w-[220px] mx-auto leading-relaxed">{item.desc}</p>
+                  <h3 className="text-sm font-black text-fg mb-3 uppercase tracking-widest">{item.title}</h3>
+                  <p className="text-[11px] text-muted-fg max-w-[220px] mx-auto leading-relaxed uppercase font-bold">{item.desc}</p>
                 </div>
               </AnimateIn>
             ))}
@@ -253,72 +277,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== TESTIMONIOS CAROUSEL ===== */}
-      <section className="py-20 md:py-28 bg-[#0b0f19]">
+      {/* ===== TESTIMONIOS ===== */}
+      <section className="py-24 md:py-32 bg-bg border-y border-border">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl font-extrabold text-white">Clientes Satisfechos</h2>
-            <p className="text-[#9ca3af] mt-3">Historias reales de nuestra comunidad.</p>
-            <div className="w-12 h-1 bg-[var(--primary)] mx-auto mt-6 rounded-full" />
+          <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
+            <div className="text-center md:text-left">
+              <h2 className="text-4xl font-black text-fg uppercase tracking-tighter">Comunidad Industrial</h2>
+              <p className="text-muted-fg text-[10px] font-black uppercase tracking-widest mt-2">Lo que dicen nuestros usuarios verificados.</p>
+            </div>
+            <div className="flex gap-2">
+              {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-fg text-fg" />)}
+            </div>
           </div>
-          <AnimateIn animation="scale-in" delay={0.2} className="mt-8">
+          <AnimateIn animation="scale-in" delay={0.2}>
             <TestimonialsCarousel testimonials={testimonialsData} />
           </AnimateIn>
         </div>
       </section>
 
-
-
       {/* ===== FOOTER ===== */}
-      <footer className="pt-20 pb-8 bg-[#0b0f19] border-t border-[#1e293b]">
+      <footer className="pt-24 pb-12 bg-bg border-t border-border">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-            <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 relative rounded-full overflow-hidden border border-[#1e293b] opacity-90">
-                  <Image src="/pedro.jpeg" alt="Logo" fill className="object-cover" />
-                </div>
-                <span className="text-xl font-bold text-white tracking-tight">
-                  PINGUIS SMS
-                </span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-20 mb-20">
+            <div className="md:col-span-2 space-y-8">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-fg text-bg flex items-center justify-center font-black text-2xl">E</div>
+                <span className="text-2xl font-black text-fg tracking-tighter uppercase">E-COMMERCE</span>
               </div>
-              <p className="text-[#9ca3af] text-sm max-w-sm leading-relaxed">
-                Plataforma líder en distribución de productos digitales seguros con entrega inmediata. Calidad asegurada 24/7.
+              <p className="text-muted-fg text-sm font-bold max-w-sm leading-relaxed uppercase tracking-tight">
+                Infraestructura avanzada para el comercio electrónico moderno. Entregando excelencia industrial en cada transacción desde 2026.
               </p>
               <div className="flex gap-4 pt-4">
-                <div className="w-10 h-6 bg-[#111827] border border-[#1e293b] rounded-sm flex items-center justify-center text-[10px] font-bold text-[#64748b]">VISA</div>
-                <div className="w-10 h-6 bg-[#111827] border border-[#1e293b] rounded-sm flex items-center justify-center text-[10px] font-bold text-[#64748b]">MC</div>
-                <div className="w-10 h-6 bg-[#111827] border border-[#1e293b] rounded-sm flex items-center justify-center text-[10px] font-bold text-[#64748b]">YAPE</div>
+                {["VISA", "MASTERCARD", "CRYPTO", "YAPE"].map(pay => (
+                  <div key={pay} className="px-4 py-2 border border-border text-[9px] font-black text-muted-fg uppercase tracking-widest hover:border-fg hover:text-fg transition-colors cursor-default">{pay}</div>
+                ))}
               </div>
             </div>
 
             <div>
-              <h4 className="font-bold text-white mb-6">Enlaces Rápidos</h4>
-              <ul className="space-y-4 text-sm text-[#9ca3af]">
-                <li><button onClick={scrollToProducts} className="hover:text-white transition-colors">Catálogo</button></li>
-                <li><a href="#" className="hover:text-white transition-colors">Cómo Funciona</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Testimonios</a></li>
+              <h4 className="font-black text-fg text-xs uppercase tracking-widest mb-10 border-b border-border pb-4">Navegación</h4>
+              <ul className="space-y-6 text-[10px] font-black text-muted-fg uppercase tracking-widest">
+                <li><button onClick={scrollToProducts} className="hover:text-fg transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Catálogo</button></li>
+                <li><a href="#" className="hover:text-fg transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Dashboard</a></li>
+                <li><a href="#" className="hover:text-fg transition-colors flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Comunidad</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-white mb-6">Contacto</h4>
-              <ul className="space-y-4 text-sm text-[#9ca3af]">
-                <li className="flex items-center gap-2"><Headphones className="w-4 h-4" /> Soporte WhatsApp</li>
-                <li className="flex items-center gap-2"><Shield className="w-4 h-4" /> Centro de Legal</li>
+              <h4 className="font-black text-fg text-xs uppercase tracking-widest mb-10 border-b border-border pb-4">Protocolo</h4>
+              <ul className="space-y-6 text-[10px] font-black text-muted-fg uppercase tracking-widest">
+                <li className="flex items-center gap-3"><Headphones className="w-4 h-4" /> Centro de Soporte</li>
+                <li className="flex items-center gap-3"><Shield className="w-4 h-4" /> Política de Privacidad</li>
+                <li className="flex items-center gap-3"><Info className="w-4 h-4" /> Términos Técnicos</li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-[#1e293b] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#64748b]">
-            <p>© 2026 Pinguis SMS Followers. All rights reserved.</p>
-            <a
-              href="https://ksyan.dev"
-              target="_blank" rel="noopener noreferrer"
-              className="hover:text-white transition-colors font-medium"
-            >
-              Desarrollado por <span className="text-white font-bold">ww.ksyan.dev</span>
-            </a>
+          <div className="pt-12 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black text-muted-fg uppercase tracking-[0.3em]">
+            <p>© 2026 E-COMMERCE. TODOS LOS DERECHOS RESERVADOS.</p>
+            <div className="flex gap-8">
+              <span className="hover:text-fg cursor-pointer">LATAM</span>
+              <span className="hover:text-fg cursor-pointer">EUROPA</span>
+              <span className="hover:text-fg cursor-pointer">EE.UU.</span>
+            </div>
           </div>
         </div>
       </footer>

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useAuth } from '../store/auth.store';
+import { useAuth } from '@/src/presentation/providers/auth.store';
 import { auth } from '@/lib/firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { Button } from '@/components/ui/button';
@@ -27,14 +27,14 @@ export function AuthButton({ className }: { className?: string }) {
 
     if (user) {
         return (
-            <div className={cn("flex items-center gap-2", className)}>
-                <span className="text-[13px] font-[family-name:var(--font-manrope)] font-bold text-[#8d90a2] hidden md:flex items-center gap-1.5">
+            <div className={cn("flex items-center gap-3", className)}>
+                <span className="text-[11px] font-black text-[#666] hidden md:flex items-center gap-1.5 uppercase tracking-tighter">
                     {user.displayName || user.email}
                 </span>
                 <button
                     onClick={handleSignOut}
-                    className="p-2 rounded-xl text-[#8d90a2] hover:text-[#ffb4ab] hover:bg-[#690005]/20 border border-transparent hover:border-[#ffb4ab]/20 transition-all duration-300"
-                    aria-label="Cerrar sesión"
+                    className="p-2 text-[#666] hover:text-white transition-colors"
+                    aria-label="Log out"
                 >
                     <LogOut className="w-4 h-4" />
                 </button>
@@ -43,10 +43,9 @@ export function AuthButton({ className }: { className?: string }) {
     }
 
     return (
-        <Link href="/auth" className={cn("flex items-center gap-2 text-[#c3c5d8] hover:text-white font-[family-name:var(--font-manrope)] font-bold text-sm transition-all hover:-translate-y-0.5", className)}>
-            <UserIcon className="w-5 h-5" />
-            <span className="hidden md:inline">Iniciar Sesión</span>
-            <span className="md:hidden">Login</span>
+        <Link href="/auth" className={cn("flex items-center gap-2 text-white hover:opacity-70 font-black text-[11px] uppercase tracking-tighter transition-all", className)}>
+            <UserIcon className="w-4 h-4" />
+            <span>Login</span>
         </Link>
     );
 }
