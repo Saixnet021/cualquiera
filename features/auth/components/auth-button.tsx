@@ -4,8 +4,7 @@
 import { useAuth } from '@/src/presentation/providers/auth.store';
 import { auth } from '@/lib/firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { Button } from '@/components/ui/button';
-import { LogOut, User as UserIcon } from 'lucide-react';
+import { LogOut, User as UserIcon, LogIn } from 'lucide-react';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -22,29 +21,36 @@ export function AuthButton({ className }: { className?: string }) {
 
     const handleSignOut = async () => {
         await signOut(auth);
+        router.push('/');
         router.refresh();
     };
 
     if (user) {
         return (
-            <div className={cn("flex items-center gap-3", className)}>
-                <span className="text-[11px] font-black text-[#666] hidden md:flex items-center gap-1.5 uppercase tracking-tighter">
-                    {user.displayName || user.email}
+            <div className={cn("flex items-center gap-2", className)}>
+                <span className="text-[10px] font-black text-muted-fg hidden lg:block uppercase tracking-tighter max-w-[100px] truncate">
+                    {user.displayName || user.email?.split('@')[0]}
                 </span>
                 <button
                     onClick={handleSignOut}
-                    className="p-2 text-[#666] hover:text-white transition-colors"
-                    aria-label="Log out"
+                    className="w-9 h-9 flex items-center justify-center border border-border text-fg hover:bg-fg hover:text-bg transition-all group"
+                    aria-label="Cerrar sesión"
                 >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
             </div>
         );
     }
 
     return (
-        <Link href="/auth" className={cn("flex items-center gap-2 text-white hover:opacity-70 font-black text-[11px] uppercase tracking-tighter transition-all", className)}>
-            <UserIcon className="w-4 h-4" />
+        <Link 
+            href="/auth" 
+            className={cn(
+                "h-9 px-4 flex items-center gap-2 border border-border bg-bg text-fg hover:bg-fg hover:text-bg font-black text-[10px] uppercase tracking-widest transition-all", 
+                className
+            )}
+        >
+            <LogIn className="w-3.5 h-3.5" />
             <span>Login</span>
         </Link>
     );

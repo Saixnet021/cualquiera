@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { AuthButton } from '@/features/auth/components/auth-button';
-import { Shield, Menu, X, ShoppingCart } from 'lucide-react';
+import { Shield, Menu, X, ShoppingCart, ShoppingBag } from 'lucide-react';
 import { useAuth } from '@/src/presentation/providers/auth.store';
 import { useCart } from '@/features/cart/store/cart.store';
 import { useState, useEffect } from 'react';
@@ -30,16 +30,16 @@ export function Navbar() {
   return (
     <nav role="navigation" className={cn(
       'fixed inset-x-0 top-0 z-50 transition-all duration-200 border-b border-transparent',
-      isScrolled ? 'bg-bg/80 backdrop-blur-xl border-border' : 'bg-transparent'
+      (isScrolled || isMenuOpen) ? 'bg-bg border-border' : 'bg-transparent'
     )}>
       <div className="flex items-center justify-between w-full h-16 px-6 md:px-12 lg:px-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="w-8 h-8 flex items-center justify-center bg-fg text-bg rounded-none font-black text-lg">
-            E
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity" onClick={() => setIsMenuOpen(false)}>
+          <div className="w-9 h-9 flex items-center justify-center bg-fg text-bg rounded-none">
+            <ShoppingBag className="w-5 h-5" />
           </div>
           <span className="text-sm font-black text-fg tracking-tighter uppercase">
-            E-COMMERCE
+            ECOMMERCE
           </span>
         </Link>
 
@@ -83,16 +83,17 @@ export function Navbar() {
           <ThemeToggle className="w-8 h-8" />
           <button
             onClick={() => { (document.querySelector('[data-cart-fab]') as HTMLButtonElement)?.click(); }}
-            className="relative w-8 h-8 flex items-center justify-center border border-border text-fg"
+            className="relative w-8 h-8 flex items-center justify-center border border-border text-fg hover:bg-fg hover:text-bg transition-all"
             aria-label="Carrito"
           >
             <ShoppingCart className="w-4 h-4" />
             {items.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-fg text-bg text-[8px] font-black h-3.5 w-3.5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-fg text-bg text-[8px] font-black h-3.5 w-3.5 flex items-center justify-center border border-bg">
                 {items.length}
               </span>
             )}
           </button>
+          <AuthButton className="w-8 h-8 !p-0" />
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="w-8 h-8 flex items-center justify-center text-fg"
@@ -105,20 +106,48 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-16 bg-bg z-40 md:hidden p-6 border-t border-border">
-          <div className="flex flex-col gap-4">
-            <Link href="/#productos" onClick={() => setIsMenuOpen(false)}
-              className="py-4 text-xl font-black text-fg border-b border-border uppercase tracking-tighter">
-              Catálogo
+        <div 
+          className="fixed inset-x-0 bottom-0 top-16 z-[100] md:hidden flex flex-col animate-in fade-in slide-in-from-top-4 duration-300"
+          style={{ backgroundColor: 'var(--bg)' }}
+        >
+          <div className="flex flex-col p-6 space-y-2">
+            <Link 
+              href="/#productos" 
+              onClick={() => setIsMenuOpen(false)}
+              className="group flex items-center justify-between p-6 border border-border bg-muted/20 hover:bg-fg hover:text-bg transition-all"
+            >
+              <div className="flex flex-col">
+                <span className="text-2xl font-black uppercase tracking-tighter">Catálogo</span>
+                <span className="text-[9px] font-bold text-muted-fg uppercase tracking-widest group-hover:text-bg/60 transition-colors">Ver todos los productos</span>
+              </div>
+              <ShoppingBag className="w-6 h-6 opacity-40 group-hover:opacity-100 transition-all" />
             </Link>
+
             {role === 'admin' && (
-              <Link href="/admin" onClick={() => setIsMenuOpen(false)}
-                className="py-4 text-xl font-black text-fg border-b border-border uppercase tracking-tighter">
-                Administrador
+              <Link 
+                href="/admin" 
+                onClick={() => setIsMenuOpen(false)}
+                className="group flex items-center justify-between p-6 border border-border bg-muted/20 hover:bg-fg hover:text-bg transition-all"
+              >
+                <div className="flex flex-col">
+                  <span className="text-2xl font-black uppercase tracking-tighter">Panel Control</span>
+                  <span className="text-[9px] font-bold text-muted-fg uppercase tracking-widest group-hover:text-bg/60 transition-colors">Gestión administrativa</span>
+                </div>
+                <Shield className="w-6 h-6 opacity-40 group-hover:opacity-100 transition-all" />
               </Link>
             )}
-            <div className="pt-4">
-              <AuthButton className="w-full" />
+          </div>
+
+          <div className="mt-auto p-6 border-t border-border bg-muted/30">
+            <AuthButton className="w-full h-16 bg-fg text-bg font-black uppercase text-xs tracking-[0.2em] hover:bg-fg/90 transition-all" />
+            <div className="flex justify-between items-center mt-6">
+              <p className="text-[8px] font-black text-muted-fg uppercase tracking-widest">
+                © 2026 INDUSTRIAL E-COMMERCE
+              </p>
+              <div className="flex gap-4">
+                 <div className="w-2 h-2 bg-fg animate-pulse rounded-full" />
+                 <span className="text-[8px] font-black text-fg uppercase">System Active</span>
+              </div>
             </div>
           </div>
         </div>
